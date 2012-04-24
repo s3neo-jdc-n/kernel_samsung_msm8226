@@ -228,6 +228,16 @@ static long alarm_do_ioctl(struct file *file, unsigned int cmd,
 
 	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
 	case ANDROID_ALARM_CLEAR(0):
+		spin_lock_irqsave(&alarm_slock, flags);
+		pr_alarm(IO, "alarm %d clear\n", alarm_type);
+		devalarm_try_to_cancel(&alarms[alarm_type]);
+		if (alarm_pending) {
+			alarm_pending &= ~alarm_type_mask;
+			if (!alarm_pending && !wait_pending)
+				__pm_relax(&alarm_wake_lock);
+		}
+		alarm_enabled &= ~alarm_type_mask;
+		spin_unlock_irqrestore(&alarm_slock, flags);
 		break;
 	case ANDROID_ALARM_SET(0):
 		alarm_set(alarm_type, ts);
@@ -236,7 +246,21 @@ static long alarm_do_ioctl(struct file *file, unsigned int cmd,
 		alarm_set(alarm_type, ts);
 		/* fall though */
 	case ANDROID_ALARM_WAIT:
-		rv = alarm_wait();
+		spin_lock_irqsave(&alarm_slock, flags);
+		pr_alarm(IO, "alarm wait\n");
+		if (!alarm_pending && wait_pending) {
+			__pm_relax(&alarm_wake_lock);
+			wait_pending = 0;
+		}
+		spin_unlock_irqrestore(&alarm_slock, flags);
+		rv = wait_event_interruptible(alarm_wait_queue, alarm_pending);
+		if (rv)
+			goto err1;
+		spin_lock_irqsave(&alarm_slock, flags);
+		rv = alarm_pending;
+		wait_pending = 1;
+		alarm_pending = 0;
+		spin_unlock_irqrestore(&alarm_slock, flags);
 		break;
 	case ANDROID_ALARM_SET_RTC:
 		rv = alarm_set_rtc(ts);

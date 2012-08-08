@@ -458,18 +458,6 @@ static int alarmtimer_resume(struct device *dev)
 
 	set_power_on_alarm(power_on_alarm , 1);
 	return 0;
-}
-#else
-static int alarmtimer_suspend(struct device *dev)
-{
-	return 0;
-}
-
-static int alarmtimer_resume(struct device *dev)
-{
-	return 0;
-}
-#endif
 
 static void alarmtimer_freezerset(ktime_t absexp, enum alarmtimer_type type)
 {

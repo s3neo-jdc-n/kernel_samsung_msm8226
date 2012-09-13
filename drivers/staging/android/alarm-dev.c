@@ -226,7 +226,6 @@ static long alarm_do_ioctl(struct file *file, unsigned int cmd,
 
 	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
 	case ANDROID_ALARM_CLEAR(0):
-		alarm_clear(alarm_type);
 		break;
 	case ANDROID_ALARM_SET(0):
 		alarm_set(alarm_type, ts);

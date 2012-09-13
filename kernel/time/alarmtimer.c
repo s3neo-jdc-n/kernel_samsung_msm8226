@@ -148,7 +148,7 @@ static void alarmtimer_enqueue(struct alarm_base *base, struct alarm *alarm)
 }
 
 /**
- * alarmtimer_remove - Removes an alarm timer from an alarm_base timerqueue
+ * alarmtimer_dequeue - Removes an alarm timer from an alarm_base timerqueue
  * @base: pointer to the base where the timer is running
  * @alarm: pointer to alarm being removed
  *
@@ -157,7 +157,7 @@ static void alarmtimer_enqueue(struct alarm_base *base, struct alarm *alarm)
  *
  * Must hold base->lock when calling.
  */
-static void alarmtimer_remove(struct alarm_base *base, struct alarm *alarm)
+static void alarmtimer_dequeue(struct alarm_base *base, struct alarm *alarm)
 {
 	struct timerqueue_node *next = timerqueue_getnext(&base->timerqueue);
 
@@ -196,10 +196,8 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
 	int restart = ALARMTIMER_NORESTART;
 
 	spin_lock_irqsave(&base->lock, flags);
-	now = base->gettime();
-	while ((next = timerqueue_getnext(&base->timerqueue))) {
-		struct alarm *alarm;
-		ktime_t expired = next->expires;
+	alarmtimer_dequeue(base, alarm);
+	spin_unlock_irqrestore(&base->lock, flags);
 
 		if (expired.tv64 > now.tv64)
 			break;
@@ -360,16 +358,9 @@ int alarm_try_to_cancel(struct alarm *alarm)
 	unsigned long flags;
 	int ret = -1;
 	spin_lock_irqsave(&base->lock, flags);
-
-	if (alarmtimer_callback_running(alarm))
-		goto out;
-
-	if (alarmtimer_is_queued(alarm)) {
-		alarmtimer_remove(base, alarm);
-		ret = 1;
-	} else
-		ret = 0;
-out:
+	ret = hrtimer_try_to_cancel(&alarm->timer);
+	if (ret >= 0)
+		alarmtimer_dequeue(base, alarm);
 	spin_unlock_irqrestore(&base->lock, flags);
 	return ret;
 }

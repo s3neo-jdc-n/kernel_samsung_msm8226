@@ -226,56 +226,8 @@ static long alarm_do_ioctl(struct file *file, unsigned int cmd,
 
 	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
 	case ANDROID_ALARM_CLEAR(0):
-<<<<<<< HEAD
-		spin_lock_irqsave(&alarm_slock, flags);
-		pr_alarm(IO, "alarm %d clear\n", alarm_type);
-		devalarm_try_to_cancel(&alarms[alarm_type]);
-		if (alarm_pending) {
-			alarm_pending &= ~alarm_type_mask;
-			if (!alarm_pending && !wait_pending)
-				__pm_relax(&alarm_wake_lock);
-		}
-		alarm_enabled &= ~alarm_type_mask;
-		spin_unlock_irqrestore(&alarm_slock, flags);
-=======
-		alarm_clear(alarm_type);
->>>>>>> e026e3a8569... staging: alarm-dev: Refactor alarm-dev ioctl code in prep for compat_ioctl
 		break;
 	case ANDROID_ALARM_SET(0):
-<<<<<<< HEAD
-		if (copy_from_user(&new_alarm_time, (void __user *)arg,
-		    sizeof(new_alarm_time))) {
-			rv = -EFAULT;
-			goto err1;
-		}
-		spin_lock_irqsave(&alarm_slock, flags);
-		pr_alarm(IO, "alarm %d set %ld.%09ld\n", alarm_type,
-			new_alarm_time.tv_sec, new_alarm_time.tv_nsec);
-		alarm_enabled |= alarm_type_mask;
-		devalarm_start(&alarms[alarm_type],
-			timespec_to_ktime(new_alarm_time));
-		spin_unlock_irqrestore(&alarm_slock, flags);
-		if (ANDROID_ALARM_BASE_CMD(cmd) !=
-						ANDROID_ALARM_SET_AND_WAIT(0))
-			break;
-		/* fall though */
-	case ANDROID_ALARM_WAIT:
-		spin_lock_irqsave(&alarm_slock, flags);
-		pr_alarm(IO, "alarm wait\n");
-		if (!alarm_pending && wait_pending) {
-			__pm_relax(&alarm_wake_lock);
-			wait_pending = 0;
-		}
-		spin_unlock_irqrestore(&alarm_slock, flags);
-		rv = wait_event_interruptible(alarm_wait_queue, alarm_pending);
-		if (rv)
-			goto err1;
-		spin_lock_irqsave(&alarm_slock, flags);
-		rv = alarm_pending;
-		wait_pending = 1;
-		alarm_pending = 0;
-		spin_unlock_irqrestore(&alarm_slock, flags);
-=======
 		alarm_set(alarm_type, ts);
 		break;
 	case ANDROID_ALARM_SET_AND_WAIT(0):
@@ -283,7 +235,6 @@ static long alarm_do_ioctl(struct file *file, unsigned int cmd,
 		/* fall though */
 	case ANDROID_ALARM_WAIT:
 		rv = alarm_wait();
->>>>>>> e026e3a8569... staging: alarm-dev: Refactor alarm-dev ioctl code in prep for compat_ioctl
 		break;
 	case ANDROID_ALARM_SET_RTC:
 		rv = alarm_set_rtc(ts);

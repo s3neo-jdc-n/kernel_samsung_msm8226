@@ -32,10 +32,10 @@
 #include <linux/regulator/machine.h>
 #include <linux/of_batterydata.h>
 #include <linux/qpnp-revid.h>
-#include <linux/android_alarm.h>
+#include <linux/alarmtimer.h>
 
 /* SAMSUNG charging specification */
-#include <linux/android_alarm.h>
+#include <linux/alarmtimer.h>
 #if defined(CONFIG_USB_SWITCH_RT8973)
 #include <linux/platform_data/rt8973.h>
 #elif defined(CONFIG_SM5502_MUIC)

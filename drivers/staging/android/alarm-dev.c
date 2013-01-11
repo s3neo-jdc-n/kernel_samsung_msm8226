@@ -228,24 +228,11 @@ static long alarm_do_ioctl(struct file *file, unsigned int cmd,
 	case ANDROID_ALARM_CLEAR(0):
 		alarm_clear(alarm_type);
 		break;
-	case ANDROID_ALARM_SET_AND_WAIT(0):
 	case ANDROID_ALARM_SET(0):
-		if (copy_from_user(&new_alarm_time, (void __user *)arg,
-		    sizeof(new_alarm_time))) {
-			rv = -EFAULT;
-			goto err1;
-		}
-		spin_lock_irqsave(&alarm_slock, flags);
-		alarm_dbg(IO, "alarm %d set %ld.%09ld\n",
-			  alarm_type,
-			  new_alarm_time.tv_sec, new_alarm_time.tv_nsec);
-		alarm_enabled |= alarm_type_mask;
-		devalarm_start(&alarms[alarm_type],
-			timespec_to_ktime(new_alarm_time));
-		spin_unlock_irqrestore(&alarm_slock, flags);
-		if (ANDROID_ALARM_BASE_CMD(cmd) !=
-						ANDROID_ALARM_SET_AND_WAIT(0))
-			break;
+		alarm_set(alarm_type, ts);
+		break;
+	case ANDROID_ALARM_SET_AND_WAIT(0):
+		alarm_set(alarm_type, ts);
 		/* fall though */
 	case ANDROID_ALARM_WAIT:
 		rv = alarm_wait();
@@ -259,6 +246,32 @@ static long alarm_do_ioctl(struct file *file, unsigned int cmd,
 
 	default:
 		rv = -EINVAL;
+	}
+	return rv;
+}
+
+static long alarm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+{
+
+	struct timespec ts;
+	int rv;
+
+	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
+	case ANDROID_ALARM_SET_AND_WAIT(0):
+	case ANDROID_ALARM_SET(0):
+	case ANDROID_ALARM_SET_RTC:
+		if (copy_from_user(&ts, (void __user *)arg, sizeof(ts)))
+			return -EFAULT;
+		break;
+	}
+
+	rv = alarm_do_ioctl(file, cmd, &ts);
+
+	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
+	case ANDROID_ALARM_GET_TIME(0):
+		if (copy_to_user((void __user *)arg, &ts, sizeof(ts)))
+			return -EFAULT;
+		break;
 	}
 	return rv;
 }

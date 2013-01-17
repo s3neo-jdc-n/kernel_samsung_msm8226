@@ -291,6 +291,9 @@ static void __cpufreq_notify_transition(struct cpufreq_policy *policy,
 {
 	BUG_ON(irqs_disabled());
 
+	if (cpufreq_disabled())
+		return;
+
 	freqs->flags = cpufreq_driver->flags;
 	pr_debug("notification %u of frequency transition to %u kHz\n",
 		state, freqs->new);
@@ -2277,6 +2280,9 @@ EXPORT_SYMBOL(cpufreq_register_notifier);
 int cpufreq_unregister_notifier(struct notifier_block *nb, unsigned int list)
 {
 	int ret;
+
+	if (cpufreq_disabled())
+		return -EINVAL;
 
 	switch (list) {
 	case CPUFREQ_TRANSITION_NOTIFIER:

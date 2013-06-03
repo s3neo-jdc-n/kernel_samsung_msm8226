@@ -314,6 +314,8 @@ static long alarm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	}
 
 	rv = alarm_do_ioctl(file, cmd, &ts);
+	if (rv)
+		return rv;
 
 	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
 	case ANDROID_ALARM_GET_TIME(0):
@@ -322,7 +324,7 @@ static long alarm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		break;
 	}
 
-	return rv;
+	return 0;
 }
 
 static int alarm_open(struct inode *inode, struct file *file)

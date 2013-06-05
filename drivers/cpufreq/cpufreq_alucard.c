@@ -110,7 +110,7 @@ static void alucard_get_cpu_frequency_table_cur(struct cpufreq_policy *policy,
 	}
 }
 
-static void ac_check_cpu(int cpu, unsigned int load, unsigned int load_freq)
+static void ac_check_cpu(int cpu, unsigned int load)
 {
 	struct ac_cpu_dbs_info_s *dbs_info = &per_cpu(ac_cpu_dbs_info, cpu);
 	struct cpufreq_policy *policy = dbs_info->cdbs.cur_policy;
@@ -140,7 +140,7 @@ static void ac_check_cpu(int cpu, unsigned int load, unsigned int load_freq)
 	}
 
 	/* Check for frequency increase or for frequency decrease */
-	if (load_freq >= (inc_cpu_load * policy->cur) 
+	if (load >= inc_cpu_load
 		 && index < dbs_info->max_index) {
 		if (dbs_info->up_rate % cpus_up_rate == 0) {
 			if ((index + pump_inc_step) <= dbs_info->max_index)
@@ -161,7 +161,7 @@ static void ac_check_cpu(int cpu, unsigned int load, unsigned int load_freq)
 			else
 				dbs_info->up_rate = 1;
 		}
-	} else if (load_freq < (dec_cpu_load * policy->cur)
+	} else if (load < dec_cpu_load
 				 && index > dbs_info->min_index) {
 		if (dbs_info->down_rate % cpus_down_rate == 0) {
 			if ((index - dbs_info->min_index) >= pump_dec_step)

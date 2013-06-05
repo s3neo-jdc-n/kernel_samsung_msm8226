@@ -70,7 +70,6 @@ void dbs_check_cpu(struct dbs_data *dbs_data, int cpu)
 	struct nm_dbs_tuners *nm_tuners = dbs_data->tuners;
 	struct cpufreq_policy *policy;
 	unsigned int max_load = 0;
-	unsigned int max_load_freq = 0;
 	unsigned int ignore_nice;
 	unsigned int j;
 
@@ -87,14 +86,12 @@ void dbs_check_cpu(struct dbs_data *dbs_data, int cpu)
 
 	policy = cdbs->cur_policy;
 
-	/* Get Absolute Load (in terms of freq for ondemand gov) */
+	/* Get Absolute Load */
 	for_each_cpu(j, policy->cpus) {
 		struct cpu_dbs_common_info *j_cdbs;
 		u64 cur_wall_time, cur_idle_time;
 		unsigned int idle_time, wall_time;
 		unsigned int load;
-		unsigned int load_freq = 0;
-		int freq_avg = 0;
 		int io_busy = 0;
 
 		j_cdbs = dbs_data->cdata->get_cpu_cdbs(j);
@@ -139,20 +136,13 @@ void dbs_check_cpu(struct dbs_data *dbs_data, int cpu)
 			continue;
 
 		load = 100 * (wall_time - idle_time) / wall_time;
+
 		if (load > max_load)
 			max_load = load;
-
-		freq_avg = __cpufreq_driver_getavg(policy, j);
-		if (freq_avg <= 0)
-			freq_avg = policy->cur;
-
-		load_freq = load * freq_avg;
-		if (load_freq > max_load_freq)
-			max_load_freq = load_freq;
 	}
 
 	cpufreq_notify_utilization(policy, max_load);
-	dbs_data->cdata->gov_check_cpu(cpu, max_load, max_load_freq);
+	dbs_data->cdata->gov_check_cpu(cpu, max_load);
 }
 EXPORT_SYMBOL_GPL(dbs_check_cpu);
 

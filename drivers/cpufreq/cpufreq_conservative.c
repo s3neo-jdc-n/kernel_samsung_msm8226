@@ -57,7 +57,7 @@ static inline unsigned int get_freq_target(struct cs_dbs_tuners *cs_tuners,
  * Any frequency increase takes it to the maximum frequency. Frequency reduction
  * happens at minimum steps of 5% (default) of maximum frequency
  */
-static void cs_check_cpu(int cpu, unsigned int load, unsigned int load_freq)
+static void cs_check_cpu(int cpu, unsigned int load)
 {
 	struct cs_cpu_dbs_info_s *dbs_info = &per_cpu(cs_cpu_dbs_info, cpu);
 	struct cpufreq_policy *policy = dbs_info->cdbs.cur_policy;

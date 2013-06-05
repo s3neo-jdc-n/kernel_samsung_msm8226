@@ -79,7 +79,7 @@ static unsigned int adjust_cpufreq_frequency_target(struct cpufreq_policy *polic
 	return target_freq;
 }
 
-static void dk_check_cpu(int cpu, unsigned int load, unsigned int load_freq)
+static void dk_check_cpu(int cpu, unsigned int load)
 {
 	struct dk_cpu_dbs_info_s *dbs_info = &per_cpu(dk_cpu_dbs_info, cpu);
 	struct cpufreq_policy *policy = dbs_info->cdbs.cur_policy;

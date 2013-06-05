@@ -100,7 +100,7 @@ static unsigned int adjust_cpufreq_frequency_target(struct cpufreq_policy *polic
 	return target_freq;
 }
 
-static void nm_check_cpu(int cpu, unsigned int load, unsigned int load_freq)
+static void nm_check_cpu(int cpu, unsigned int load)
 {
 	struct nm_cpu_dbs_info_s *dbs_info = &per_cpu(nm_cpu_dbs_info, cpu);
 	struct cpufreq_policy *policy = dbs_info->cdbs.cur_policy;
@@ -125,14 +125,14 @@ static void nm_check_cpu(int cpu, unsigned int load, unsigned int load_freq)
 	}
 
 	/* Check for frequency increase or for frequency decrease */
-	if (load_freq >= (inc_cpu_load * policy->cur)
+	if (load >= inc_cpu_load
 		 && policy->cur < policy->max) {
 		tmp_freq = adjust_cpufreq_frequency_target(policy,
 												   dbs_info->freq_table,
 												   (policy->cur + ((load + freq_step - freq_up_brake == 0 ? 1 : load + freq_step - freq_up_brake) * 3780)));
 
 		__cpufreq_driver_target(policy, tmp_freq, CPUFREQ_RELATION_L);
-	} else if (load_freq < (dec_cpu_load * policy->cur)
+	} else if (load < dec_cpu_load
 				&& policy->cur > policy->min) {
 		tmp_freq = adjust_cpufreq_frequency_target(policy,
 												   dbs_info->freq_table,

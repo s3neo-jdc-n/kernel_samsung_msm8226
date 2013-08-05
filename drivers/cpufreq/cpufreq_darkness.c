@@ -137,8 +137,8 @@ static ssize_t store_sampling_rate(struct dbs_data *dbs_data, const char *buf,
 	return count;
 }
 
-static ssize_t store_ignore_nice(struct dbs_data *dbs_data, const char *buf,
-		size_t count)
+static ssize_t store_ignore_nice_load(struct dbs_data *dbs_data,
+		const char *buf, size_t count)
 {
 	struct dk_dbs_tuners *dk_tuners = dbs_data->tuners;
 	unsigned int input, j;
@@ -151,10 +151,10 @@ static ssize_t store_ignore_nice(struct dbs_data *dbs_data, const char *buf,
 	if (input > 1)
 		input = 1;
 
-	if (input == dk_tuners->ignore_nice) /* nothing to do */
+	if (input == dk_tuners->ignore_nice_load) /* nothing to do */
 		return count;
 
-	dk_tuners->ignore_nice = input;
+	dk_tuners->ignore_nice_load = input;
 
 	/* we need to re-evaluate prev_cpu_idle */
 	for_each_online_cpu(j) {
@@ -162,7 +162,7 @@ static ssize_t store_ignore_nice(struct dbs_data *dbs_data, const char *buf,
 		dbs_info = &per_cpu(dk_cpu_dbs_info, j);
 		dbs_info->cdbs.prev_cpu_idle = get_cpu_idle_time(j,
 					&dbs_info->cdbs.prev_cpu_wall, 0);
-		if (dk_tuners->ignore_nice)
+		if (dk_tuners->ignore_nice_load)
 			dbs_info->cdbs.prev_cpu_nice =
 				kcpustat_cpu(j).cpustat[CPUTIME_NICE];
 	}
@@ -170,17 +170,17 @@ static ssize_t store_ignore_nice(struct dbs_data *dbs_data, const char *buf,
 }
 
 show_store_one(dk, sampling_rate);
-show_store_one(dk, ignore_nice);
+show_store_one(dk, ignore_nice_load);
 declare_show_sampling_rate_min(dk);
 
 gov_sys_pol_attr_rw(sampling_rate);
-gov_sys_pol_attr_rw(ignore_nice);
+gov_sys_pol_attr_rw(ignore_nice_load);
 gov_sys_pol_attr_ro(sampling_rate_min);
 
 static struct attribute *dbs_attributes_gov_sys[] = {
 	&sampling_rate_min_gov_sys.attr,
 	&sampling_rate_gov_sys.attr,
-	&ignore_nice_gov_sys.attr,
+	&ignore_nice_load_gov_sys.attr,
 	NULL
 };
 
@@ -192,7 +192,7 @@ static struct attribute_group dk_attr_group_gov_sys = {
 static struct attribute *dbs_attributes_gov_pol[] = {
 	&sampling_rate_min_gov_pol.attr,
 	&sampling_rate_gov_pol.attr,
-	&ignore_nice_gov_pol.attr,
+	&ignore_nice_load_gov_pol.attr,
 	NULL
 };
 
@@ -215,7 +215,7 @@ static int dk_init(struct dbs_data *dbs_data)
 
 	tuners->sampling_rate = DEF_SAMPLING_RATE;
 	dbs_data->min_sampling_rate = MIN_SAMPLING_RATE;
-	tuners->ignore_nice = 0;
+	tuners->ignore_nice_load = 0;
 
 	dbs_data->tuners = tuners;
 	mutex_init(&dbs_data->mutex);

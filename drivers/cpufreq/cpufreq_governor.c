@@ -74,15 +74,15 @@ void dbs_check_cpu(struct dbs_data *dbs_data, int cpu)
 	unsigned int j;
 
 	if (dbs_data->cdata->governor == GOV_ONDEMAND)
-		ignore_nice = od_tuners->ignore_nice;
+		ignore_nice = od_tuners->ignore_nice_load;
 	else if (dbs_data->cdata->governor == GOV_ALUCARD)
-		ignore_nice = ac_tuners->ignore_nice;
+		ignore_nice = ac_tuners->ignore_nice_load;
 	else if (dbs_data->cdata->governor == GOV_DARKNESS)
-		ignore_nice = dk_tuners->ignore_nice;
+		ignore_nice = dk_tuners->ignore_nice_load;
 	else if (dbs_data->cdata->governor == GOV_NIGHTMARE)
-		ignore_nice = nm_tuners->ignore_nice;
+		ignore_nice = nm_tuners->ignore_nice_load;
 	else
-		ignore_nice = cs_tuners->ignore_nice;
+		ignore_nice = cs_tuners->ignore_nice_load;
 
 	policy = cdbs->cur_policy;
 
@@ -351,30 +351,30 @@ int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 		cs_tuners = dbs_data->tuners;
 		cs_dbs_info = dbs_data->cdata->get_cpu_dbs_info_s(cpu);
 		sampling_rate = cs_tuners->sampling_rate;
-		ignore_nice = cs_tuners->ignore_nice;
+		ignore_nice = cs_tuners->ignore_nice_load;
 	} else if (dbs_data->cdata->governor == GOV_ALUCARD) {
 		ac_tuners = dbs_data->tuners;
 		ac_dbs_info = dbs_data->cdata->get_cpu_dbs_info_s(cpu);
 		sampling_rate = ac_tuners->sampling_rate;
-		ignore_nice = ac_tuners->ignore_nice;
+		ignore_nice = ac_tuners->ignore_nice_load;
 		ac_ops = dbs_data->cdata->gov_ops;
 	} else if (dbs_data->cdata->governor == GOV_DARKNESS) {
 		dk_tuners = dbs_data->tuners;
 		dk_dbs_info = dbs_data->cdata->get_cpu_dbs_info_s(cpu);
 		sampling_rate = dk_tuners->sampling_rate;
-		ignore_nice = dk_tuners->ignore_nice;
+		ignore_nice = dk_tuners->ignore_nice_load;
 		dk_ops = dbs_data->cdata->gov_ops;
 	} else if (dbs_data->cdata->governor == GOV_NIGHTMARE) {
 		nm_tuners = dbs_data->tuners;
 		nm_dbs_info = dbs_data->cdata->get_cpu_dbs_info_s(cpu);
 		sampling_rate = nm_tuners->sampling_rate;
-		ignore_nice = nm_tuners->ignore_nice;
+		ignore_nice = nm_tuners->ignore_nice_load;
 		nm_ops = dbs_data->cdata->gov_ops;
 	} else {
 		od_tuners = dbs_data->tuners;
 		od_dbs_info = dbs_data->cdata->get_cpu_dbs_info_s(cpu);
 		sampling_rate = od_tuners->sampling_rate;
-		ignore_nice = od_tuners->ignore_nice;
+		ignore_nice = od_tuners->ignore_nice_load;
 		od_ops = dbs_data->cdata->gov_ops;
 		io_busy = od_tuners->io_is_busy;
 	}

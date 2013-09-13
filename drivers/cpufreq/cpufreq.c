@@ -41,7 +41,10 @@
 static struct cpufreq_driver *cpufreq_driver;
 static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
 #ifdef CONFIG_HOTPLUG_CPU
-/* This one keeps track of the previously set governor of a removed CPU */
+/*
+ * This one keeps track of the previously set governor and user-set
+ * min/max freq of a removed CPU
+ */
 struct cpufreq_cpu_save_data {
 	char gov[CPUFREQ_NAME_LEN];
 	unsigned int max, min;
@@ -1074,6 +1077,16 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 		pr_debug("Restoring governor %s for cpu %d\n",
 		       policy->governor->name, cpu);
 	}
+	if (per_cpu(cpufreq_policy_save, cpu).min) {
+		policy->min = per_cpu(cpufreq_policy_save, cpu).min;
+		policy->user_policy.min = policy->min;
+	}
+	if (per_cpu(cpufreq_policy_save, cpu).max) {
+		policy->max = per_cpu(cpufreq_policy_save, cpu).max;
+		policy->user_policy.max = policy->max;
+	}
+	pr_debug("Restoring CPU%d user policy min %d and max %d\n", cpu,
+		 policy->min, policy->max);
 #endif
 
 	ret = cpufreq_add_dev_interface(cpu, policy, dev);
@@ -1169,12 +1182,12 @@ static int __cpufreq_remove_dev(struct device *dev, struct subsys_interface *sif
 
 #ifdef CONFIG_HOTPLUG_CPU
 	if (!cpufreq_driver->setpolicy) {
-		strncpy(per_cpu(cpufreq_policy_save, cpu).gov, data->governor->name,
-			CPUFREQ_NAME_LEN);
+		strlcpy(per_cpu(cpufreq_policy_save, cpu).gov,
+			data->governor->name, CPUFREQ_NAME_LEN);
 		per_cpu(cpufreq_policy_save, cpu).min = data->user_policy.min;
 		per_cpu(cpufreq_policy_save, cpu).max = data->user_policy.max;
 		pr_debug("Saving CPU%d user policy min %d and max %d\n",
-				cpu, data->user_policy.min, data->user_policy.max);
+			cpu, data->user_policy.min, data->user_policy.max);
 	}
 #endif
 
@@ -1783,6 +1796,7 @@ void cpufreq_unregister_governor(struct cpufreq_governor *governor)
 {
 #ifdef CONFIG_HOTPLUG_CPU
 	int cpu;
+	struct cpufreq_cpu_save_data *saved_policy;
 #endif
 
 	if (!governor)
@@ -1795,9 +1809,9 @@ void cpufreq_unregister_governor(struct cpufreq_governor *governor)
 	for_each_present_cpu(cpu) {
 		if (cpu_online(cpu))
 			continue;
-		if (!strcmp(per_cpu(cpufreq_policy_save, cpu).gov,
-					governor->name))
-			strcpy(per_cpu(cpufreq_policy_save, cpu).gov, "\0");
+		saved_policy = &per_cpu(cpufreq_policy_save, cpu);
+		if (!strcmp(saved_policy->gov, governor->name))
+			strlcpy(saved_policy->gov, "\0", CPUFREQ_NAME_LEN);
 		per_cpu(cpufreq_policy_save, cpu).min = 0;
 		per_cpu(cpufreq_policy_save, cpu).max = 0;
 	}

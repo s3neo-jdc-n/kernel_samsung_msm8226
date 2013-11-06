@@ -305,6 +305,17 @@ static int alarmtimer_resume(struct device *dev)
 	rtc_timer_cancel(rtc, &rtctimer);
 	return 0;
 }
+static int alarmtimer_resume(struct device *dev)
+{
+	struct rtc_device *rtc;
+
+	rtc = alarmtimer_get_rtcdev();
+	/* If we have no rtcdev, just return */
+	if (!rtc)
+		return 0;
+	rtc_timer_cancel(rtc, &rtctimer);
+	return 0;
+}
 #else
 static int alarmtimer_suspend(struct device *dev)
 {

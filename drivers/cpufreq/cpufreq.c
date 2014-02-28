@@ -334,7 +334,6 @@ static void __cpufreq_notify_transition(struct cpufreq_policy *policy,
 		break;
 	}
 }
-
 /**
  * cpufreq_notify_transition - call notifier chain and adjust_jiffies
  * on frequency transition.
@@ -1296,6 +1295,10 @@ unlock:
 static void cpufreq_sysfs_release(struct kobject *kobj)
 {
 	struct cpufreq_policy *policy = to_policy(kobj);
+
+	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
+			CPUFREQ_REMOVE_POLICY, policy);
+
 	pr_debug("last reference is dropped\n");
 	complete(&policy->kobj_unregister);
 }

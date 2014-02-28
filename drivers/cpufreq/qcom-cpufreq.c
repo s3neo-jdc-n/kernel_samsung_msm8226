@@ -30,7 +30,6 @@
 #include <linux/platform_device.h>
 #include <trace/events/power.h>
 #include <mach/socinfo.h>
-#include <soc/qcom/cpufreq.h>
 
 #include "../../arch/arm/mach-msm/acpuclock.h"
 

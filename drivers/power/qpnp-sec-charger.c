@@ -41,6 +41,10 @@
 #include <linux/state_helper.h>
 #endif
 
+#ifdef CONFIG_FORCE_FAST_CHARGE
+#include <linux/fastchg.h>
+#endif
+
 /* SAMSUNG charging specification */
 #include <linux/android_alarm.h>
 #if defined(CONFIG_USB_SWITCH_RT8973)
@@ -2319,7 +2323,7 @@ module_param(charger_monitor, int, 0644);
 static int ext_ovp_present;
 module_param(ext_ovp_present, int, 0644);
 
-#define USB_WALL_THRESHOLD_MA	500
+#define USB_WALL_THRESHOLD_MA	900
 #define OVP_USB_WALL_THRESHOLD_MA	200
 static int
 qpnp_power_get_property_mains(struct power_supply *psy,
@@ -5965,9 +5969,21 @@ static void sec_handle_cable_insertion_removal(struct qpnp_chg_chip *chip)
 			if (chip->ovp_uvlo_state == 0) {
 				/* FIX for USB current not set properly */
 				chg_imax_ma = chip->batt_pdata->imax_usb;
+#ifdef CONFIG_FORCE_FAST_CHARGE
+	if (force_fast_charge == FAST_CHARGE_FORCE_AC)
+				chg_imax_ma = USB_CHARGE_500;
+	else if (force_fast_charge == FAST_CHARGE_FORCE_CUSTOM_MA)
+				chg_imax_ma = usb_charge_level;
+#endif
 				qpnp_chg_usb_suspend_enable(chip, 0);
 				qpnp_chg_iusbmax_set(chip, chg_imax_ma);
 				chg_ibatmax_ma = chip->batt_pdata->imax_usb;
+#ifdef CONFIG_FORCE_FAST_CHARGE
+	if (force_fast_charge == FAST_CHARGE_FORCE_AC)
+				chg_ibatmax_ma = USB_CHARGE_500;
+    else if (force_fast_charge == FAST_CHARGE_FORCE_CUSTOM_MA)
+				chg_ibatmax_ma = usb_charge_level;
+#endif
 				ibatmax_ma = (chip->siop_level*chg_ibatmax_ma) / 100;
 				if (ibatmax_ma > QPNP_CHG_IBATMAX_MIN ) {
 					pr_err("USB : SIOP change in current ibatmax_ma(%d)\n", chg_ibatmax_ma);
@@ -6006,7 +6022,13 @@ static void sec_handle_cable_insertion_removal(struct qpnp_chg_chip *chip)
 					value.intval = 1;
 					chip->usb_psy->set_property(chip->usb_psy, POWER_SUPPLY_PROP_ONLINE, &value);
 				}
+				
 				chg_imax_ma = chip->batt_pdata->imax_ta;
+
+#ifdef CONFIG_FORCE_FAST_CHARGE
+	   if (force_fast_charge == FAST_CHARGE_FORCE_CUSTOM_MA)
+				chg_imax_ma = ac_charge_level;
+#endif
 				qpnp_chg_usb_suspend_enable(chip, 0);
 
 				#ifndef CONFIG_NOT_USE_EXT_OVP
@@ -6031,8 +6053,12 @@ static void sec_handle_cable_insertion_removal(struct qpnp_chg_chip *chip)
 				pr_err("USB Trim : %d\n", qpnp_chg_iusb_trim_get(chip));
 
 				imax_set.intval = chip->batt_pdata->imax_ta * 1000;
+#ifdef CONFIG_FORCE_FAST_CHARGE
+	   if (force_fast_charge == FAST_CHARGE_FORCE_CUSTOM_MA)
+	   			imax_set.intval = ac_charge_level * 1000;
+#endif
 				chip->usb_psy->set_property(chip->usb_psy, POWER_SUPPLY_PROP_CURRENT_MAX, &imax_set);
-
+				
 				imax_set.intval = 0;
 				chip->usb_psy->get_property(chip->usb_psy, POWER_SUPPLY_PROP_CURRENT_MAX, &imax_set);
 				pr_err("iusbmax : %d \n", imax_set.intval);

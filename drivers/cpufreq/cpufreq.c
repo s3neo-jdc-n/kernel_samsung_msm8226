@@ -590,13 +590,13 @@ static ssize_t store_scaling_min_freq_all_cpus(struct cpufreq_policy *policy, co
 			continue;
 		}
 #endif
-		cpu_policy = __cpufreq_cpu_get(cpu, 0);
+		cpu_policy = __cpufreq_cpu_get(cpu, 1);
 		if (!cpu_policy)
 			continue;
 
 		ret = store_scaling_min_freq(cpu_policy, buf, count);
 
-		__cpufreq_cpu_put(cpu_policy, 0);
+		__cpufreq_cpu_put(cpu_policy, 1);
 	}
 	put_online_cpus();
 
@@ -628,13 +628,13 @@ static ssize_t store_scaling_max_freq_all_cpus(struct cpufreq_policy *policy, co
 			continue;
 		}
 #endif
-		cpu_policy = __cpufreq_cpu_get(cpu, 0);
+		cpu_policy = __cpufreq_cpu_get(cpu, 1);
 		if (!cpu_policy)
 			continue;
 
 		ret = store_scaling_max_freq(cpu_policy, buf, count);
 
-		__cpufreq_cpu_put(cpu_policy, 0);
+		__cpufreq_cpu_put(cpu_policy, 1);
 	}
 	put_online_cpus();
 
@@ -753,15 +753,17 @@ static ssize_t store_scaling_governor_all_cpus(struct cpufreq_policy *policy, co
 			continue;
 		}
 #endif
-		cpu_policy = __cpufreq_cpu_get(cpu, 0);
+		cpu_policy = __cpufreq_cpu_get(cpu, 1);
 		if (!cpu_policy)
 			continue;
 
 		ret = store_scaling_governor(cpu_policy, buf, count);
 
-		__cpufreq_cpu_put(cpu_policy, 0);
+		__cpufreq_cpu_put(cpu_policy, 1);
 	}
 	put_online_cpus();
+
+	return count;
 }
 #endif
 

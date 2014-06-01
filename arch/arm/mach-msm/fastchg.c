@@ -5,6 +5,8 @@
  * Adapted for 9505 from Note 3:
  * Paul Reioux <reioux@gmail.com>
  *
+ * Modded by ktoonsez from Jean-Pierre and Faux's original implementation:
+ *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
  * may be copied, distributed, and modified under those terms.
@@ -39,7 +41,7 @@
  *   0 - disabled - allow anything up to 1.2A/h to be used as AC / USB custom current
  *   1 - enabled  - behaviour as described above (default)
  *
- * /sys/kernel/fast_charge/ac_leves (ro)
+ * /sys/kernel/fast_charge/ac_levels (ro)
  *
  *   display available levels for AC (for failsafe enabled mode)
  *
@@ -94,6 +96,39 @@ static struct kobj_attribute force_fast_charge_attribute =
 	__ATTR(force_fast_charge, 0666,
 		force_fast_charge_show,
 		force_fast_charge_store);
+
+int use_mtp_during_fast_charge;
+
+/* sysfs interface for "use_mtp_during_fast_charge" */
+static ssize_t use_mtp_during_fast_charge_show(struct kobject *kobj,
+		struct kobj_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%d\n", use_mtp_during_fast_charge);
+}
+
+static ssize_t use_mtp_during_fast_charge_store(struct kobject *kobj,
+		struct kobj_attribute *attr, const char *buf, size_t count)
+{
+
+	int new_use_mtp_during_fast_charge;
+
+	sscanf(buf, "%du", &new_use_mtp_during_fast_charge);
+
+	switch(new_use_mtp_during_fast_charge) {
+		case USE_MTP_DURING_FAST_CHARGE_DISABLED:
+		case USE_MTP_DURING_FAST_CHARGE_ENABLED:
+			use_mtp_during_fast_charge = new_use_mtp_during_fast_charge;
+			return count;
+		default:
+			return -EINVAL;
+	}
+}
+
+static struct kobj_attribute use_mtp_during_fast_charge_attribute =
+	__ATTR(use_mtp_during_fast_charge, 0666,
+		use_mtp_during_fast_charge_show,
+		use_mtp_during_fast_charge_store);
+
 
 /* sysfs interface for "ac_charge_level" */
 
@@ -178,7 +213,7 @@ static ssize_t usb_charge_level_store(struct kobject *kobj,
 		switch (new_usb_charge_level) {
 			case USB_CHARGE_500:
 			case USB_CHARGE_700:
-			case USB_CHARGE_900:
+			case USB_CHARGE_1000:
 				usb_charge_level = new_usb_charge_level;
 				return count;
 			default:
@@ -258,8 +293,9 @@ static ssize_t info_show(struct kobject *kobj,
 {
 	return sprintf(
 		buf,
-		"Forced Fast Charge for Samsung Note 3 %s\n\n"
+		"Forced Fast Charge for Samsung Galaxy S3 Neo %s\n\n"
 		"Fast charge mode : %s\n"
+		"MTP while charging mode : %s\n"
 		"Custom  AC level : %dmA/h\n"
 		"Custom USB level : %dmA/h\n"
 		"Failsafe mode    : %s\n"
@@ -269,6 +305,8 @@ static ssize_t info_show(struct kobject *kobj,
 		 force_fast_charge == FAST_CHARGE_DISABLED 	   ? "0 - Disabled (default)" :
 		(force_fast_charge == FAST_CHARGE_FORCE_AC         ? "1 - Use stock AC level on USB" :
 		(force_fast_charge == FAST_CHARGE_FORCE_CUSTOM_MA  ? "2 - Use custom mA on AC and USB" : "Problem : value out of range")),
+		 use_mtp_during_fast_charge          == USE_MTP_DURING_FAST_CHARGE_DISABLED           ? "0 - Disabled" :
+		(use_mtp_during_fast_charge          == USE_MTP_DURING_FAST_CHARGE_ENABLED            ? "1 - Enabled" : "Problem : value out of range"),
 		 ac_charge_level,
 		 usb_charge_level,
 		 failsafe          == FAIL_SAFE_DISABLED           ? "0 - Failsafe disabled - please be careful !" :
@@ -296,6 +334,7 @@ static struct kobject *force_fast_charge_kobj;
 
 static struct attribute *force_fast_charge_attrs[] = {
 	&force_fast_charge_attribute.attr,
+	&use_mtp_during_fast_charge_attribute.attr,
 	&ac_charge_level_attribute.attr,
 	&usb_charge_level_attribute.attr,
 	&failsafe_attribute.attr,
@@ -316,6 +355,8 @@ int force_fast_charge_init(void)
 
 	/* Forced fast charge disabled by default */
 	force_fast_charge = FAST_CHARGE_DISABLED;
+	/* Use MTP during fast charge, enabled by default */
+	use_mtp_during_fast_charge = USE_MTP_DURING_FAST_CHARGE_ENABLED;
 	/* Default AC charge level to 1000mA/h    */
 	ac_charge_level   = AC_CHARGE_1000;
 	/* Default USB charge level to 500mA/h    */

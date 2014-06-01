@@ -5,6 +5,8 @@
  * Adapted for 9505 from Note 3:
  * Paul Reioux <reioux@gmail.com>
  *
+ * Modded by ktoonsez from Jean-Pierre and Faux's original implementation:
+ *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
  * may be copied, distributed, and modified under those terms.
@@ -20,7 +22,7 @@
 #ifndef _LINUX_FASTCHG_H
 #define _LINUX_FASTCHG_H
 
-#define FAST_CHARGE_VERSION "v1.0 by Paul Reioux"
+#define FAST_CHARGE_VERSION "v1.1 by Ktoonsez from Jean-Pierre and Paul Reioux original implementation"
 #define AC_LEVELS  "800 900 1000 1100 1200"
 #define USB_LEVELS "500 700 900"
 #define ANY_LEVELS "0 to 1600"
@@ -30,6 +32,11 @@ extern int force_fast_charge;
 #define FAST_CHARGE_DISABLED 0	/* default */
 #define FAST_CHARGE_FORCE_AC 1
 #define FAST_CHARGE_FORCE_CUSTOM_MA 2
+
+extern int use_mtp_during_fast_charge;
+
+#define USE_MTP_DURING_FAST_CHARGE_DISABLED 0
+#define USE_MTP_DURING_FAST_CHARGE_ENABLED 1	/* default */
 
 extern int ac_charge_level;
 
@@ -43,7 +50,7 @@ extern int usb_charge_level;
 
 #define USB_CHARGE_500 500	/* default */
 #define USB_CHARGE_700 700
-#define USB_CHARGE_900 900
+#define USB_CHARGE_1000 1000
 
 /* Whatever happens, this is the limit */
 #define MAX_CHARGE_LEVEL 1200

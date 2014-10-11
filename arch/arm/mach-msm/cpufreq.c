@@ -66,50 +66,129 @@ struct cpufreq_work_struct {
 static DEFINE_PER_CPU(struct cpufreq_work_struct, cpufreq_work);
 static struct workqueue_struct *msm_cpufreq_wq;
 #ifdef CONFIG_SEC_DVFS
-static unsigned int upper_limit_freq;
-static unsigned int lower_limit_freq;
+static unsigned int upper_limit_freq[NR_CPUS] = {0, 0, 0, 0};
+static unsigned int lower_limit_freq[NR_CPUS];
 static unsigned int cpuinfo_max_freq;
 static unsigned int cpuinfo_min_freq;
 
+unsigned int get_cpu_min_lock(unsigned int cpu)
+{
+	if (cpu >= 0 && cpu < NR_CPUS)
+		return lower_limit_freq[cpu];
+	else
+		return 0;
+}
+EXPORT_SYMBOL(get_cpu_min_lock);
+
 unsigned int get_min_lock(void)
 {
-	return lower_limit_freq;
+	unsigned int cpu;
+	unsigned int min = UINT_MAX;
+	
+	for_each_possible_cpu(cpu) {
+		if (min > lower_limit_freq[cpu] 
+			&& lower_limit_freq[cpu] > 0)
+				min = lower_limit_freq[cpu];
+	}
+	if (min == UINT_MAX)
+		min = 0;
+
+	return min;
 }
+EXPORT_SYMBOL(get_min_lock);
+
+unsigned int get_cpu_max_lock(unsigned int cpu)
+{
+	if (cpu >= 0 && cpu < NR_CPUS)
+		return upper_limit_freq[cpu];
+	else
+		return 0;
+}
+EXPORT_SYMBOL(get_cpu_max_lock);
 
 unsigned int get_max_lock(void)
 {
-	return upper_limit_freq;
+	unsigned int cpu;
+	unsigned int max = 0;
+
+	for_each_possible_cpu(cpu) {
+		if (max < upper_limit_freq[cpu])
+			max = upper_limit_freq[cpu];
+	}
+
+	return max;
 }
+EXPORT_SYMBOL(get_max_lock);
+
+void set_cpu_min_lock(unsigned int cpu, int freq)
+{
+	if (cpu >= 0 && cpu < NR_CPUS) {
+		if (freq <= MIN_FREQ_LIMIT || freq > MAX_FREQ_LIMIT)
+			lower_limit_freq[cpu] = 0;
+		else
+			lower_limit_freq[cpu] = freq;
+	}
+}
+EXPORT_SYMBOL(set_cpu_min_lock);
 
 void set_min_lock(int freq)
 {
+	unsigned int cpu;
+	unsigned l_freq = 0;
+
 	if (freq <= MIN_FREQ_LIMIT)
-		lower_limit_freq = 0;
+		l_freq = 0;
 	else if (freq > MAX_FREQ_LIMIT)
-		lower_limit_freq = 0;
+		l_freq = 0;
 	else
-		lower_limit_freq = freq;
+		l_freq = freq;
+
+	for_each_possible_cpu(cpu) {
+		lower_limit_freq[cpu] = l_freq;
+	}
 }
+EXPORT_SYMBOL(set_min_lock);
+
+void set_cpu_max_lock(unsigned int cpu, int freq)
+{
+	if (cpu >= 0 && cpu < NR_CPUS) {
+		if (freq < MIN_FREQ_LIMIT || freq >= MAX_FREQ_LIMIT)
+			upper_limit_freq[cpu] = 0;
+		else
+			upper_limit_freq[cpu] = freq;
+	}
+}
+EXPORT_SYMBOL(set_cpu_max_lock);
 
 void set_max_lock(int freq)
 {
+	unsigned int cpu;
+	unsigned l_freq = 0;
+
 	if (freq < MIN_FREQ_LIMIT)
-		upper_limit_freq = 0;
+		l_freq = 0;
 	else if (freq >= MAX_FREQ_LIMIT)
-		upper_limit_freq = 0;
+		l_freq = 0;
 	else
-		upper_limit_freq = freq;
+		l_freq = freq;
+
+	for_each_possible_cpu(cpu) {
+		upper_limit_freq[cpu] = l_freq;
+	}
 }
+EXPORT_SYMBOL(set_max_lock);
 
 int get_max_freq(void)
 {
 	return cpuinfo_max_freq;
 }
+EXPORT_SYMBOL(get_max_freq);
 
 int get_min_freq(void)
 {
 	return cpuinfo_min_freq;
 }
+EXPORT_SYMBOL(get_min_freq);
 #endif
 struct cpufreq_suspend_t {
 	struct mutex suspend_mutex;
@@ -161,16 +240,19 @@ static int set_cpu_freq(struct cpufreq_policy *policy, unsigned int new_freq,
 	int saved_sched_rt_prio = -EINVAL;
 	struct cpufreq_freqs freqs;
 	struct sched_param param = { .sched_priority = MAX_RT_PRIO-1 };
+	struct cpufreq_frequency_table *table;
+	unsigned int ll_freq = lower_limit_freq[policy->cpu];
+	unsigned int ul_freq = upper_limit_freq[policy->cpu];
 
 #ifdef CONFIG_SEC_DVFS
-	if (lower_limit_freq || upper_limit_freq) {
+	if (ll_freq || ul_freq) {
 		unsigned int t_freq = new_freq;
 
-		if (lower_limit_freq && new_freq < lower_limit_freq)
-			t_freq = lower_limit_freq;
+		if (ll_freq && new_freq < ll_freq)
+			t_freq = ll_freq;
 
-		if (upper_limit_freq && new_freq > upper_limit_freq)
-			t_freq = upper_limit_freq;
+		if (ul_freq && new_freq > ul_freq)
+			t_freq = ul_freq;
 
 		new_freq = t_freq;
 
@@ -178,7 +260,11 @@ static int set_cpu_freq(struct cpufreq_policy *policy, unsigned int new_freq,
 			new_freq = policy->min;
 		if (new_freq > policy->max)
 			new_freq = policy->max;
+	}
+#endif
 
+#ifdef CONFIG_SEC_DVFS
+	if (ll_freq || ul_freq) {
 		if (new_freq == policy->cur)
 			return 0;
 	}

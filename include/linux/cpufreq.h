@@ -444,9 +444,13 @@ int set_freq_limit(unsigned long id, unsigned int freq);
 	|| defined(CONFIG_SEC_BERLUTI_PROJECT)|| defined(CONFIG_SEC_FRESCONEO_PROJECT) || defined(CONFIG_SEC_AFYON_PROJECT) \
 	|| defined(CONFIG_SEC_S3VE_PROJECT) || defined(CONFIG_SEC_ATLANTIC_PROJECT) || defined(CONFIG_SEC_DEGAS_PROJECT) \
 	|| defined(CONFIG_SEC_HESTIA_PROJECT) || defined(CONFIG_SEC_MEGA2_PROJECT) ||  defined(CONFIG_SEC_GNOTE_PROJECT)
+unsigned int get_cpu_min_lock(unsigned int cpu);
 unsigned int get_min_lock(void);
+unsigned int get_cpu_max_lock(unsigned int cpu);
 unsigned int get_max_lock(void);
+void set_cpu_min_lock(unsigned int cpu, int freq);
 void set_min_lock(int freq);
+void set_cpu_max_lock(unsigned int cpu, int freq);
 void set_max_lock(int freq);
 #endif
 #endif

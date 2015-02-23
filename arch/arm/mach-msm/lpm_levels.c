@@ -135,6 +135,7 @@ module_param_named(
 static int msm_pm_sleep_time_override;
 module_param_named(sleep_time_override,
 	msm_pm_sleep_time_override, int, S_IRUGO | S_IWUSR | S_IWGRP);
+static uint64_t suspend_wake_time;
 
 static uint64_t suspend_wake_time;
 
@@ -396,9 +397,10 @@ static void lpm_system_prepare(struct lpm_system_state *system_state,
 			goto bail_system_sleep;
 		}
 
-
+		if (!suspend_wake_time)
+			suspend_wake_time =  msm_pm_sleep_time_override;
 		if (!from_idle)
-			us = USEC_PER_SEC * msm_pm_sleep_time_override;
+			us = USEC_PER_SEC * suspend_wake_time;
 
 		do_div(us, USEC_PER_SEC/SCLK_HZ);
 		sclk = (uint32_t)us;

@@ -54,8 +54,6 @@ static struct workqueue_struct *msm_cpufreq_wq;
 #ifdef CONFIG_SEC_DVFS
 static unsigned int upper_limit_freq[NR_CPUS] = {0, 0, 0, 0};
 static unsigned int lower_limit_freq[NR_CPUS];
-static unsigned int cpuinfo_max_freq;
-static unsigned int cpuinfo_min_freq;
 
 unsigned int get_cpu_min_lock(unsigned int cpu)
 {
@@ -163,18 +161,6 @@ void set_max_lock(int freq)
 	}
 }
 EXPORT_SYMBOL(set_max_lock);
-
-int get_max_freq(void)
-{
-	return cpuinfo_max_freq;
-}
-EXPORT_SYMBOL(get_max_freq);
-
-int get_min_freq(void)
-{
-	return cpuinfo_min_freq;
-}
-EXPORT_SYMBOL(get_min_freq);
 #endif
 struct cpufreq_suspend_t {
 	struct mutex suspend_mutex;

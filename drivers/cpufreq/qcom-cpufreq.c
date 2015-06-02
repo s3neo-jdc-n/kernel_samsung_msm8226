@@ -310,6 +310,9 @@ static unsigned int msm_cpufreq_get_freq(unsigned int cpu)
 static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 {
 	int cur_freq;
+#ifdef CONFIG_SEC_DVFS
+	int min_freq_lock, max_freq_lock;
+#endif
 	int index;
 	int ret = 0;
 	struct cpufreq_frequency_table *table;
@@ -355,6 +358,16 @@ static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 		cur_freq = clk_get_rate(cpu_clk[policy->cpu])/1000;
 	else
 		cur_freq = acpuclk_get_rate(policy->cpu);
+
+#ifdef CONFIG_SEC_DVFS
+	min_freq_lock = get_cpu_min_lock(policy->cpu);
+	if (min_freq_lock > 0 && cur_freq < min_freq_lock)
+		cur_freq = min_freq_lock;
+
+	max_freq_lock = get_cpu_max_lock(policy->cpu);
+	if (max_freq_lock > 0 && cur_freq > max_freq_lock)
+		cur_freq = max_freq_lock;
+#endif
 
 	if (cpufreq_frequency_table_target(policy, table, cur_freq,
 	    CPUFREQ_RELATION_H, &index) &&

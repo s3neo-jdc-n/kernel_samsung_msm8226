@@ -293,6 +293,8 @@ struct fbc_panel_info {
 	u32 lossy_mode_idx;
 };
 
+struct mdss_livedisplay_ctx;
+
 struct mdss_panel_info {
 	u32 xres;
 	u32 yres;
@@ -345,6 +347,7 @@ struct mdss_panel_info {
 	struct lvds_panel_info lvds;
 	u8 (*alpm_event) (u8 flag);
 	void (*alpm_gamma_read) (void);
+	struct mdss_livedisplay_ctx;
 };
 
 #if defined(CONFIG_FB_MSM_MDSS_S6E8AA0A_HD_PANEL)

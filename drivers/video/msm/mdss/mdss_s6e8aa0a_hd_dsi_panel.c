@@ -33,6 +33,7 @@
 #include "dlog.h"
 #include "mdss_mdp.h"
 #include "mdss_mdp_rotator.h"
+#include "mdss_livedisplay.h"
 
 #ifdef CONFIG_POWERSUSPEND
 #include <linux/powersuspend.h>
@@ -947,7 +948,7 @@ void mdss_dsi_cmds_send(struct mdss_dsi_ctrl_pdata *ctrl, struct dsi_cmd_desc *c
 }
 
 
-static void mdss_dsi_panel_cmds_send(struct mdss_dsi_ctrl_pdata *ctrl,
+void mdss_dsi_panel_cmds_send(struct mdss_dsi_ctrl_pdata *ctrl,
 			struct dsi_panel_cmds *pcmds)
 {
 	struct dcs_cmd_req cmdreq;
@@ -1731,7 +1732,7 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 }
 
 
-static int mdss_dsi_parse_dcs_cmds(struct device_node *np,
+int mdss_dsi_parse_dcs_cmds(struct device_node *np,
 		struct dsi_panel_cmds *pcmds, char *cmd_key, char *link_key)
 {
 	const char *data;
@@ -2224,6 +2225,7 @@ static int mdss_panel_parse_dt(struct device_node *np,
             ctrl_pdata->dsi_off_state = DSI_LP_MODE; 
         } 
         pr_err("[ on state : %d, off state : %d\n",ctrl_pdata->dsi_on_state ,ctrl_pdata->dsi_off_state ); 
+	mdss_livedisplay_parse_dt(np, pinfo);
 	return 0;
 error:
 	return -EINVAL;

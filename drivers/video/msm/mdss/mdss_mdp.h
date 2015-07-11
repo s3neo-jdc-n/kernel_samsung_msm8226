@@ -682,6 +682,7 @@ int mdss_mdp_wb_get_secure(struct msm_fb_data_type *mfd, uint8_t *enable);
 				(mfd->mdp.private1))->wb)
 
 int mdss_mdp_ctl_reset(struct mdss_mdp_ctl *ctl);
+int mdss_mdp_user_pcc_config(struct mdp_pcc_cfg_data *config);
 
 void dumpreg(void);
 void mdss_dsi_debug_check_te(void);

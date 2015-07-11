@@ -54,6 +54,8 @@
 #include "mdss_fb.h"
 #include "mdss_mdp.h"
 
+#include "mdss_livedisplay.h"
+
 #ifdef CONFIG_FB_MSM_TRIPLE_BUFFER
 #define MDSS_FB_NUM 3
 #else
@@ -655,6 +657,8 @@ static int mdss_fb_probe(struct platform_device *pdev)
 	INIT_DELAYED_WORK(&mfd->idle_notify_work, __mdss_fb_idle_notify_work);
 
 	return rc;
+	
+	return mdss_livedisplay_create_sysfs(mfd);
 }
 
 static int mdss_fb_remove(struct platform_device *pdev)

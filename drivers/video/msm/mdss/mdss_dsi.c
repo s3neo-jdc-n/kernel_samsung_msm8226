@@ -33,6 +33,7 @@
 #include "mdss_panel.h"
 #include "mdss_dsi.h"
 #include "mdss_debug.h"
+#include "mdss_livedisplay.h"
 
 static unsigned char *mdss_dsi_base;
 int contsplash_lkstat = 0;
@@ -798,6 +799,11 @@ static int mdss_dsi_unblank(struct mdss_panel_data *pdata)
 	}
 #endif
 
+	mdss_livedisplay_update(pdata->panel_info.livedisplay,
+			MODE_UPDATE_ALL);
+
+error:
+	mdss_dsi_clk_ctrl(ctrl_pdata, DSI_ALL_CLKS, 0);
 	pr_debug("%s-:\n", __func__);
 
 	return ret;

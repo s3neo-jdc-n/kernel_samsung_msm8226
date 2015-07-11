@@ -513,6 +513,7 @@ static int mdss_fb_create_sysfs(struct msm_fb_data_type *mfd)
 	if (rc)
 		pr_err("sysfs group creation failed, rc=%d\n", rc);
 	return rc;
+	return mdss_livedisplay_create_sysfs(mfd);
 }
 
 static void mdss_fb_remove_sysfs(struct msm_fb_data_type *mfd)
@@ -657,8 +658,6 @@ static int mdss_fb_probe(struct platform_device *pdev)
 	INIT_DELAYED_WORK(&mfd->idle_notify_work, __mdss_fb_idle_notify_work);
 
 	return rc;
-	
-	return mdss_livedisplay_create_sysfs(mfd);
 }
 
 static int mdss_fb_remove(struct platform_device *pdev)

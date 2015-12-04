@@ -24,6 +24,10 @@
 #include <linux/clk.h>
 #include <linux/lcd_notify.h>
 
+#ifdef CONFIG_STATE_NOTIFIER
+#include <linux/state_notifier.h>
+#endif
+
 #include "mdss.h"
 #include "mdss_fb.h"
 #include "mdss_panel.h"

@@ -22,6 +22,7 @@
 #include <linux/leds.h>
 #include <linux/pwm.h>
 #include <linux/err.h>
+#include <linux/display_state.h>
 #if defined (CONFIG_LCD_CLASS_DEVICE)
 	#include <linux/lcd.h>
 #endif
@@ -61,6 +62,14 @@ static int panel_state;
 #define GAMMA_SMART 2
 
 DEFINE_LED_TRIGGER(bl_led_trigger);
+
+
+bool display_on = true;
+
+bool is_display_on()
+{
+	return display_on;
+}
 
 static struct mdss_samsung_driver_data msd;
 static struct mdss_panel_data mpd;
@@ -1607,6 +1616,8 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 		return -EINVAL;
 	}
 
+	display_on = true;
+
 	#ifdef CONFIG_POWERSUSPEND
        set_power_suspend_state_panel_hook(POWER_SUSPEND_INACTIVE);
 	#endif
@@ -1698,6 +1709,8 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 		pr_err("%s: Invalid input data\n", __func__);
 		return -EINVAL;
 	}
+
+	display_on = false;
 
 	#ifdef CONFIG_POWERSUSPEND
        set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE);

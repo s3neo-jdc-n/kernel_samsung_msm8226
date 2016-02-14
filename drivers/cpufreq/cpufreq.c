@@ -29,6 +29,7 @@
 #include <linux/completion.h>
 #include <linux/mutex.h>
 #include <linux/syscore_ops.h>
+#include <linux/tick.h>
 
 #include <trace/events/power.h>
 
@@ -47,7 +48,8 @@ struct cpufreq_cpu_save_data {
 };
 static DEFINE_PER_CPU(struct cpufreq_cpu_save_data, cpufreq_policy_save);
 #endif
-static DEFINE_SPINLOCK(cpufreq_driver_lock);
+static DEFINE_RWLOCK(cpufreq_driver_lock);
+static DEFINE_MUTEX(cpufreq_governor_lock);
 
 static struct kset *cpufreq_kset;
 static struct kset *cpudev_kset;
@@ -64,8 +66,6 @@ static struct kset *cpudev_kset;
  *   mode before doing so.
  *
  * Additional rules:
- * - All holders of the lock should check to make sure that the CPU they
- *   are concerned with are online after they get the lock.
  * - Governor routines that can be called in cpufreq hotplug path should not
  *   take this sem as top level hotplug notifier handler takes this.
  * - Lock should not be held across
@@ -75,15 +75,11 @@ static DEFINE_PER_CPU(int, cpufreq_policy_cpu);
 static DEFINE_PER_CPU(struct rw_semaphore, cpu_policy_rwsem);
 
 #define lock_policy_rwsem(mode, cpu)					\
-int lock_policy_rwsem_##mode(int cpu)					\
+static int lock_policy_rwsem_##mode(int cpu)				\
 {									\
 	int policy_cpu = per_cpu(cpufreq_policy_cpu, cpu);		\
 	BUG_ON(policy_cpu == -1);					\
 	down_##mode(&per_cpu(cpu_policy_rwsem, policy_cpu));		\
-	if (unlikely(!cpu_online(cpu))) {				\
-		up_##mode(&per_cpu(cpu_policy_rwsem, policy_cpu));	\
-		return -1;						\
-	}								\
 									\
 	return 0;							\
 }
@@ -92,7 +88,7 @@ lock_policy_rwsem(read, cpu);
 lock_policy_rwsem(write, cpu);
 
 #define unlock_policy_rwsem(mode, cpu)					\
-void unlock_policy_rwsem_##mode(int cpu)				\
+static void unlock_policy_rwsem_##mode(int cpu)				\
 {									\
 	int policy_cpu = per_cpu(cpufreq_policy_cpu, cpu);		\
 	BUG_ON(policy_cpu == -1);					\
@@ -174,6 +170,21 @@ cputime64_t get_cpu_idle_time(unsigned int cpu, cputime64_t *wall, int io_busy)
 }
 EXPORT_SYMBOL_GPL(get_cpu_idle_time);
 
+bool have_governor_per_policy(void)
+{
+	return false;
+}
+EXPORT_SYMBOL_GPL(have_governor_per_policy);
+
+struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy)
+{
+	if (have_governor_per_policy())
+		return &policy->kobj;
+	else
+		return cpufreq_global_kobject;
+}
+EXPORT_SYMBOL_GPL(get_governor_parent_kobj);
+
 static struct cpufreq_policy *__cpufreq_cpu_get(unsigned int cpu, int sysfs)
 {
 	struct cpufreq_policy *data;
@@ -183,7 +194,7 @@ static struct cpufreq_policy *__cpufreq_cpu_get(unsigned int cpu, int sysfs)
 		goto err_out;
 
 	/* get the cpufreq driver */
-	spin_lock_irqsave(&cpufreq_driver_lock, flags);
+	read_lock_irqsave(&cpufreq_driver_lock, flags);
 
 	if (!cpufreq_driver)
 		goto err_out_unlock;
@@ -201,13 +212,13 @@ static struct cpufreq_policy *__cpufreq_cpu_get(unsigned int cpu, int sysfs)
 	if (!sysfs && !kobject_get(&data->kobj))
 		goto err_out_put_module;
 
-	spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
+	read_unlock_irqrestore(&cpufreq_driver_lock, flags);
 	return data;
 
 err_out_put_module:
 	module_put(cpufreq_driver->owner);
 err_out_unlock:
-	spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
+	read_unlock_irqrestore(&cpufreq_driver_lock, flags);
 err_out:
 	return NULL;
 }
@@ -283,7 +294,6 @@ static inline void adjust_jiffies(unsigned long val, struct cpufreq_freqs *ci)
 }
 #endif
 
-
 /**
  * cpufreq_notify_transition - call notifier chain and adjust_jiffies
  * on frequency transition.
@@ -292,17 +302,15 @@ static inline void adjust_jiffies(unsigned long val, struct cpufreq_freqs *ci)
  * function. It is called twice on all CPU frequency changes that have
  * external effects.
  */
-void cpufreq_notify_transition(struct cpufreq_freqs *freqs, unsigned int state)
+void __cpufreq_notify_transition(struct cpufreq_policy *policy,
+		struct cpufreq_freqs *freqs, unsigned int state)
 {
-	struct cpufreq_policy *policy;
-
 	BUG_ON(irqs_disabled());
 
 	freqs->flags = cpufreq_driver->flags;
 	pr_debug("notification %u of frequency transition to %u kHz\n",
 		state, freqs->new);
 
-	policy = per_cpu(cpufreq_cpu_data, freqs->cpu);
 	switch (state) {
 
 	case CPUFREQ_PRECHANGE:
@@ -339,7 +347,27 @@ void cpufreq_notify_transition(struct cpufreq_freqs *freqs, unsigned int state)
 		break;
 	}
 }
+/**
+ * cpufreq_notify_transition - call notifier chain and adjust_jiffies
+ * on frequency transition.
+ *
+ * This function calls the transition notifiers and the "adjust_jiffies"
+ * function. It is called twice on all CPU frequency changes that have
+ * external effects.
+ */
+void cpufreq_notify_transition(struct cpufreq_policy *policy,
+		struct cpufreq_freqs *freqs, unsigned int state)
+{
+	if (!policy) {
+		pr_debug("have not policy for transition notify");
+		return;
+	}
+
+	for_each_cpu(freqs->cpu, policy->cpus)
+		__cpufreq_notify_transition(policy, freqs, state);
+}
 EXPORT_SYMBOL_GPL(cpufreq_notify_transition);
+
 /**
  * cpufreq_notify_utilization - notify CPU userspace about CPU utilization
  * change
@@ -459,7 +487,7 @@ static int __cpufreq_set_policy(struct cpufreq_policy *data,
 static ssize_t store_##file_name					\
 (struct cpufreq_policy *policy, const char *buf, size_t count)		\
 {									\
-	unsigned int ret = -EINVAL;					\
+	unsigned int ret;					\
 	struct cpufreq_policy new_policy;				\
 									\
 	ret = cpufreq_get_policy(&new_policy, policy->cpu);		\
@@ -469,15 +497,13 @@ static ssize_t store_##file_name					\
 	ret = sscanf(buf, "%u", &new_policy.object);			\
 	if (ret != 1)							\
 		return -EINVAL;						\
-									\
-	policy->user_policy.object = new_policy.object;			\
-	new_policy.user_policy.object = new_policy.object;		\
-									\
+										\
 	ret = cpufreq_driver->verify(&new_policy);			\
 	if (ret)							\
 		pr_err("cpufreq: Frequency verification failed\n");	\
 									\
 	ret = __cpufreq_set_policy(policy, &new_policy);		\
+	policy->user_policy.object = policy->object;			\
 									\
 	return ret ? ret : count;					\
 }
@@ -548,8 +574,6 @@ static ssize_t store_scaling_governor(struct cpufreq_policy *policy,
 
 	policy->user_policy.policy = policy->policy;
 	policy->user_policy.governor = policy->governor;
-
-	sysfs_notify(&policy->kobj, NULL, "scaling_governor");
 
 	kobject_uevent(cpufreq_global_kobject, KOBJ_ADD);
 
@@ -803,8 +827,6 @@ static int cpufreq_add_dev_symlink(unsigned int cpu,
 
 		if (j == cpu)
 			continue;
-		if (!cpu_online(j))
-			continue;
 
 		pr_debug("CPU %u already managed, adding link\n", j);
 		managed_policy = cpufreq_cpu_get(cpu);
@@ -858,27 +880,23 @@ static int cpufreq_add_dev_interface(unsigned int cpu,
 		if (ret)
 			goto err_out_kobj_put;
 	}
-
 	if (cpufreq_driver->target) {
-               ret = sysfs_create_file(&policy->kobj, &scaling_cur_freq.attr);
-               if (ret)
-                       goto err_out_kobj_put;
-       }
-
+		ret = sysfs_create_file(&policy->kobj, &scaling_cur_freq.attr);
+		if (ret)
+			goto err_out_kobj_put;
+	}
 	if (cpufreq_driver->bios_limit) {
 		ret = sysfs_create_file(&policy->kobj, &bios_limit.attr);
 		if (ret)
 			goto err_out_kobj_put;
 	}
 
-	spin_lock_irqsave(&cpufreq_driver_lock, flags);
+	write_lock_irqsave(&cpufreq_driver_lock, flags);
 	for_each_cpu(j, policy->cpus) {
-		if (!cpu_online(j))
-			continue;
 		per_cpu(cpufreq_cpu_data, j) = policy;
 		per_cpu(cpufreq_policy_cpu, j) = policy->cpu;
 	}
-	spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
+	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
 
 	ret = cpufreq_add_dev_symlink(cpu, policy);
 	if (ret)
@@ -911,27 +929,30 @@ static int cpufreq_add_policy_cpu(unsigned int cpu, unsigned int sibling,
 				  struct device *dev)
 {
 	struct cpufreq_policy *policy;
-	int ret = 0;
+	int ret = 0, has_target = !!cpufreq_driver->target;
 	unsigned long flags;
 
 	policy = cpufreq_cpu_get(sibling);
 	WARN_ON(!policy);
 
-	per_cpu(cpufreq_policy_cpu, cpu) = policy->cpu;
+	if (has_target)
+		__cpufreq_governor(policy, CPUFREQ_GOV_STOP);
 
-	lock_policy_rwsem_write(cpu);
+	lock_policy_rwsem_write(sibling);
 
-	__cpufreq_governor(policy, CPUFREQ_GOV_STOP);
+	write_lock_irqsave(&cpufreq_driver_lock, flags);
 
-	spin_lock_irqsave(&cpufreq_driver_lock, flags);
 	cpumask_set_cpu(cpu, policy->cpus);
+	per_cpu(cpufreq_policy_cpu, cpu) = policy->cpu;
 	per_cpu(cpufreq_cpu_data, cpu) = policy;
-	spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
+	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
 
-	__cpufreq_governor(policy, CPUFREQ_GOV_START);
-	__cpufreq_governor(policy, CPUFREQ_GOV_LIMITS);
+	unlock_policy_rwsem_write(sibling);
 
-	unlock_policy_rwsem_write(cpu);
+	if (has_target) {
+		__cpufreq_governor(policy, CPUFREQ_GOV_START);
+		__cpufreq_governor(policy, CPUFREQ_GOV_LIMITS);
+	}
 
 	ret = sysfs_create_link(&dev->kobj, &policy->kobj, "cpufreq");
 	if (ret) {
@@ -955,7 +976,7 @@ static int cpufreq_add_policy_cpu(unsigned int cpu, unsigned int sibling,
 static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 {
 	unsigned int j, cpu = dev->id;
-	int ret = -ENOMEM, found = 0;
+	int ret = -ENOMEM;
 	struct cpufreq_policy *policy;
 	unsigned long flags;
 #ifdef CONFIG_HOTPLUG_CPU
@@ -979,11 +1000,15 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 
 #ifdef CONFIG_HOTPLUG_CPU
 	/* Check if this cpu was hot-unplugged earlier and has siblings */
+	read_lock_irqsave(&cpufreq_driver_lock, flags);
 	for_each_online_cpu(sibling) {
 		struct cpufreq_policy *cp = per_cpu(cpufreq_cpu_data, sibling);
-		if (cp && cpumask_test_cpu(cpu, cp->related_cpus))
+		if (cp && cpumask_test_cpu(cpu, cp->related_cpus)) {
+			read_unlock_irqrestore(&cpufreq_driver_lock, flags);
 			return cpufreq_add_policy_cpu(cpu, sibling, dev);
+		}
 	}
+	read_unlock_irqrestore(&cpufreq_driver_lock, flags);
 #endif
 #endif
 
@@ -1003,37 +1028,22 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 		goto err_free_cpumask;
 
 	policy->cpu = cpu;
+	policy->governor = CPUFREQ_DEFAULT_GOVERNOR;
 	cpumask_copy(policy->cpus, cpumask_of(cpu));
 
 	/* Initially set CPU itself as the policy_cpu */
 	per_cpu(cpufreq_policy_cpu, cpu) = cpu;
-	ret = (lock_policy_rwsem_write(cpu) < 0);
-	WARN_ON(ret);
 
 	init_completion(&policy->kobj_unregister);
 	INIT_WORK(&policy->update, handle_update);
 
-	/* Set governor before ->init, so that driver could check it */
-#ifdef CONFIG_HOTPLUG_CPU
-	for_each_online_cpu(sibling) {
-		struct cpufreq_policy *cp = per_cpu(cpufreq_cpu_data, sibling);
-		if (cp && cp->governor &&
-		    (cpumask_test_cpu(cpu, cp->related_cpus))) {
-			policy->governor = cp->governor;
-			found = 1;
-			break;
-		}
-	}
-#endif
-	if (!found)
-		policy->governor = CPUFREQ_DEFAULT_GOVERNOR;
 	/* call driver. From then on the cpufreq must be able
 	 * to accept all calls to ->verify and ->setpolicy for this CPU
 	 */
 	ret = cpufreq_driver->init(policy);
 	if (ret) {
 		pr_debug("initialization failed\n");
-		goto err_unlock_policy;
+		goto err_set_policy_cpu;
 	}
 
 	/* related cpus should atleast have policy->cpus */
@@ -1064,7 +1074,8 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 	if (ret)
 		goto err_out_unregister;
 
-	unlock_policy_rwsem_write(cpu);
+	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
+	CPUFREQ_CREATE_POLICY, policy);
 
 	kobject_uevent(&policy->kobj, KOBJ_ADD);
 	module_put(cpufreq_driver->owner);
@@ -1073,16 +1084,22 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 	return 0;
 
 err_out_unregister:
-	spin_lock_irqsave(&cpufreq_driver_lock, flags);
+	write_lock_irqsave(&cpufreq_driver_lock, flags);
 	for_each_cpu(j, policy->cpus)
 		per_cpu(cpufreq_cpu_data, j) = NULL;
-	spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
+	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
 
 	kobject_put(&policy->kobj);
 	wait_for_completion(&policy->kobj_unregister);
 
+
+err_set_policy_cpu:
+	per_cpu(cpufreq_policy_cpu, cpu) = -1;
+	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
+			CPUFREQ_REMOVE_POLICY, policy);
+	free_cpumask_var(policy->related_cpus);
 err_unlock_policy:
-	unlock_policy_rwsem_write(cpu);
+	per_cpu(cpufreq_policy_cpu, cpu) = -1;
 	free_cpumask_var(policy->related_cpus);
 err_free_cpumask:
 	free_cpumask_var(policy->cpus);
@@ -1094,6 +1111,22 @@ module_out:
 	return ret;
 }
 
+static void update_policy_cpu(struct cpufreq_policy *policy, unsigned int cpu)
+{
+	int j;
+
+	policy->last_cpu = policy->cpu;
+	policy->cpu = cpu;
+
+	for_each_cpu(j, policy->cpus)
+		per_cpu(cpufreq_policy_cpu, j) = cpu;
+
+#ifdef CONFIG_CPU_FREQ_TABLE
+	cpufreq_frequency_table_update_policy_cpu(policy);
+#endif
+	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
+			CPUFREQ_UPDATE_POLICY_CPU, policy);
+}
 
 /**
  * __cpufreq_remove_dev - remove a CPU device
@@ -1104,139 +1137,116 @@ module_out:
  */
 static int __cpufreq_remove_dev(struct device *dev, struct subsys_interface *sif)
 {
-	unsigned int cpu = dev->id;
+	unsigned int cpu = dev->id, ret, cpus;
 	unsigned long flags;
 	struct cpufreq_policy *data;
 	struct kobject *kobj;
 	struct completion *cmp;
-#ifdef CONFIG_SMP
 	struct device *cpu_dev;
-	unsigned int j;
-#endif
 
-	pr_debug("unregistering CPU %u\n", cpu);
+	pr_debug("%s: unregistering CPU %u\n", __func__, cpu);
 
-	spin_lock_irqsave(&cpufreq_driver_lock, flags);
+	write_lock_irqsave(&cpufreq_driver_lock, flags);
+
 	data = per_cpu(cpufreq_cpu_data, cpu);
-
-	if (!data) {
-		spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
-		unlock_policy_rwsem_write(cpu);
-		return -EINVAL;
-	}
 	per_cpu(cpufreq_cpu_data, cpu) = NULL;
 
+	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
 
-#ifdef CONFIG_SMP
-	/* if this isn't the CPU which is the parent of the kobj, we
-	 * only need to unlink, put and exit
-	 */
-	if (unlikely(cpu != data->cpu)) {
-		pr_debug("removing link\n");
-		cpumask_clear_cpu(cpu, data->cpus);
-		spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
-		kobj = &dev->kobj;
-		cpufreq_cpu_put(data);
-		unlock_policy_rwsem_write(cpu);
-		sysfs_remove_link(kobj, "cpufreq");
-		return 0;
+	if (!data) {
+		pr_debug("%s: No cpu_data found\n", __func__);
+		return -EINVAL;
 	}
-#endif
-
-#ifdef CONFIG_SMP
-
-#ifdef CONFIG_HOTPLUG_CPU
-	strncpy(per_cpu(cpufreq_policy_save, cpu).gov, data->governor->name,
-			CPUFREQ_NAME_LEN);
-	per_cpu(cpufreq_policy_save, cpu).min = data->user_policy.min;
-	per_cpu(cpufreq_policy_save, cpu).max = data->user_policy.max;
-	pr_debug("Saving CPU%d user policy min %d and max %d\n",
-			cpu, data->user_policy.min, data->user_policy.max);
-#endif
-
-	/* if we have other CPUs still registered, we need to unlink them,
-	 * or else wait_for_completion below will lock up. Clean the
-	 * per_cpu(cpufreq_cpu_data) while holding the lock, and remove
-	 * the sysfs links afterwards.
-	 */
-	if (unlikely(cpumask_weight(data->cpus) > 1)) {
-		for_each_cpu(j, data->cpus) {
-			if (j == cpu)
-				continue;
-			per_cpu(cpufreq_cpu_data, j) = NULL;
-		}
-	}
-
-	spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
-
-	if (unlikely(cpumask_weight(data->cpus) > 1)) {
-		for_each_cpu(j, data->cpus) {
-			if (j == cpu)
-				continue;
-			pr_debug("removing link for cpu %u\n", j);
-#ifdef CONFIG_HOTPLUG_CPU
-			strncpy(per_cpu(cpufreq_policy_save, j).gov,
-				data->governor->name, CPUFREQ_NAME_LEN);
-			per_cpu(cpufreq_policy_save, j).min
-						= data->user_policy.min;
-			per_cpu(cpufreq_policy_save, j).max
-						= data->user_policy.max;
-			pr_debug("Saving CPU%d user policy min %d and max %d\n",
-					j, data->min, data->max);
-#endif
-			cpu_dev = get_cpu_device(j);
-			kobj = &cpu_dev->kobj;
-			unlock_policy_rwsem_write(cpu);
-			sysfs_remove_link(kobj, "cpufreq");
-			lock_policy_rwsem_write(cpu);
-			cpufreq_cpu_put(data);
-		}
-	}
-#else
-	spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
-#endif
 
 	if (cpufreq_driver->target)
 		__cpufreq_governor(data, CPUFREQ_GOV_STOP);
 
-	kobj = &data->kobj;
-	cmp = &data->kobj_unregister;
-	unlock_policy_rwsem_write(cpu);
-	kobject_put(kobj);
-
-	/* we need to make sure that the underlying kobj is actually
-	 * not referenced anymore by anybody before we proceed with
-	 * unloading.
-	 */
-	pr_debug("waiting for dropping of refcount\n");
-	wait_for_completion(cmp);
-	pr_debug("wait complete\n");
-
-	lock_policy_rwsem_write(cpu);
-	if (cpufreq_driver->exit)
-		cpufreq_driver->exit(data);
-	unlock_policy_rwsem_write(cpu);
-
 #ifdef CONFIG_HOTPLUG_CPU
-	/* when the CPU which is the parent of the kobj is hotplugged
-	 * offline, check for siblings, and create cpufreq sysfs interface
-	 * and symlinks
-	 */
-	if (unlikely(cpumask_weight(data->cpus) > 1)) {
-		/* first sibling now owns the new sysfs dir */
-		cpumask_clear_cpu(cpu, data->cpus);
-		cpufreq_add_dev(get_cpu_device(cpumask_first(data->cpus)), NULL);
-
-		/* finally remove our own symlink */
-		lock_policy_rwsem_write(cpu);
-		__cpufreq_remove_dev(dev, sif);
+	if (!cpufreq_driver->setpolicy) {
+		strncpy(per_cpu(cpufreq_policy_save, cpu).gov, data->governor->name,
+			CPUFREQ_NAME_LEN);
+		per_cpu(cpufreq_policy_save, cpu).min = data->user_policy.min;
+		per_cpu(cpufreq_policy_save, cpu).max = data->user_policy.max;
+		pr_debug("Saving CPU%d user policy min %d and max %d\n",
+				cpu, data->user_policy.min, data->user_policy.max);
 	}
 #endif
 
-	free_cpumask_var(data->related_cpus);
-	free_cpumask_var(data->cpus);
-	kfree(data);
+	WARN_ON(lock_policy_rwsem_write(cpu));
+	cpus = cpumask_weight(data->cpus);
 
+	if (cpus > 1)
+		cpumask_clear_cpu(cpu, data->cpus);
+	unlock_policy_rwsem_write(cpu);
+
+	if (cpu != data->cpu) {
+		sysfs_remove_link(&dev->kobj, "cpufreq");
+	} else if (cpus > 1) {
+		/* first sibling now owns the new sysfs dir */
+		cpu_dev = get_cpu_device(cpumask_first(data->cpus));
+		sysfs_remove_link(&cpu_dev->kobj, "cpufreq");
+		ret = kobject_move(&data->kobj, &cpu_dev->kobj);
+		if (ret) {
+			pr_err("%s: Failed to move kobj: %d", __func__, ret);
+
+			WARN_ON(lock_policy_rwsem_write(cpu));
+			cpumask_set_cpu(cpu, data->cpus);
+
+			write_lock_irqsave(&cpufreq_driver_lock, flags);
+			per_cpu(cpufreq_cpu_data, cpu) = data;
+			write_unlock_irqrestore(&cpufreq_driver_lock, flags);
+
+			unlock_policy_rwsem_write(cpu);
+
+			ret = sysfs_create_link(&cpu_dev->kobj, &data->kobj,
+					"cpufreq");
+			return -EINVAL;
+		}
+		blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
+				CPUFREQ_REMOVE_POLICY, data);
+
+		WARN_ON(lock_policy_rwsem_write(cpu));
+		update_policy_cpu(data, cpu_dev->id);
+		unlock_policy_rwsem_write(cpu);
+		pr_debug("%s: policy Kobject moved to cpu: %d from: %d\n",
+				__func__, cpu_dev->id, cpu);
+	}
+
+	/* If cpu is last user of policy, free policy */
+	if (cpus == 1) {
+		if (cpufreq_driver->target)
+			__cpufreq_governor(data, CPUFREQ_GOV_POLICY_EXIT);
+
+		lock_policy_rwsem_read(cpu);
+		kobj = &data->kobj;
+		cmp = &data->kobj_unregister;
+		unlock_policy_rwsem_read(cpu);
+		kobject_put(kobj);
+
+		/* we need to make sure that the underlying kobj is actually
+		 * not referenced anymore by anybody before we proceed with
+		 * unloading.
+		 */
+		pr_debug("waiting for dropping of refcount\n");
+		wait_for_completion(cmp);
+		pr_debug("wait complete\n");
+
+		if (cpufreq_driver->exit)
+			cpufreq_driver->exit(data);
+
+		free_cpumask_var(data->related_cpus);
+		free_cpumask_var(data->cpus);
+		kfree(data);
+	} else {
+		pr_debug("%s: removing link, cpu: %d\n", __func__, cpu);
+		cpufreq_cpu_put(data);
+		if (cpufreq_driver->target) {
+			__cpufreq_governor(data, CPUFREQ_GOV_START);
+			__cpufreq_governor(data, CPUFREQ_GOV_LIMITS);
+		}
+	}
+
+	per_cpu(cpufreq_policy_cpu, cpu) = -1;
 	return 0;
 }
 
@@ -1248,9 +1258,6 @@ static int cpufreq_remove_dev(struct device *dev, struct subsys_interface *sif)
 
 	if (cpu_is_offline(cpu))
 		return 0;
-
-	if (unlikely(lock_policy_rwsem_write(cpu)))
-		BUG();
 
 	retval = __cpufreq_remove_dev(dev, sif);
 	return retval;
@@ -1278,16 +1285,23 @@ static void handle_update(struct work_struct *work)
 static void cpufreq_out_of_sync(unsigned int cpu, unsigned int old_freq,
 				unsigned int new_freq)
 {
+	struct cpufreq_policy *policy;
 	struct cpufreq_freqs freqs;
+	unsigned long flags;
+
 
 	pr_debug("Warning: CPU frequency out of sync: cpufreq and timing "
 	       "core thinks of %u, is %u kHz.\n", old_freq, new_freq);
 
-	freqs.cpu = cpu;
 	freqs.old = old_freq;
 	freqs.new = new_freq;
-	cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
-	cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
+
+	read_lock_irqsave(&cpufreq_driver_lock, flags);
+	policy = per_cpu(cpufreq_cpu_data, cpu);
+	read_unlock_irqrestore(&cpufreq_driver_lock, flags);
+
+	cpufreq_notify_transition(policy, &freqs, CPUFREQ_PRECHANGE);
+	cpufreq_notify_transition(policy, &freqs, CPUFREQ_POSTCHANGE);
 }
 
 /**
@@ -1322,6 +1336,10 @@ unsigned int cpufreq_quick_get(unsigned int cpu)
 	struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
 	unsigned int ret_freq = 0;
 
+	if (cpufreq_driver && cpufreq_driver->setpolicy && cpufreq_driver->get)
+		return cpufreq_driver->get(cpu);
+
+	policy = cpufreq_cpu_get(cpu);
 	if (policy) {
 		ret_freq = policy->cur;
 		cpufreq_cpu_put(policy);
@@ -1511,6 +1529,9 @@ int cpufreq_register_notifier(struct notifier_block *nb, unsigned int list)
 {
 	int ret;
 
+	if (cpufreq_disabled())
+		return -EINVAL;
+
 	WARN_ON(!init_cpufreq_transition_notifier_list_called);
 
 	switch (list) {
@@ -1573,13 +1594,24 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
 			    unsigned int relation)
 {
 	int retval = -EINVAL;
+	unsigned int old_target_freq = target_freq;
 
 	if (cpufreq_disabled())
 		return -ENODEV;
 
-	pr_debug("target for CPU %u: %u kHz, relation %u\n", policy->cpu,
-		target_freq, relation);
-	if (cpu_online(policy->cpu) && cpufreq_driver->target)
+	/* Make sure that target_freq is within supported range */
+	if (target_freq > policy->max)
+		target_freq = policy->max;
+	if (target_freq < policy->min)
+		target_freq = policy->min;
+
+	pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kHz\n",
+			policy->cpu, target_freq, relation, old_target_freq);
+
+	if (target_freq == policy->cur)
+		return 0;
+
+	if (cpufreq_driver->target)
 		retval = cpufreq_driver->target(policy, target_freq, relation);
 
 	return retval;
@@ -1614,12 +1646,17 @@ int __cpufreq_driver_getavg(struct cpufreq_policy *policy, unsigned int cpu)
 {
 	int ret = 0;
 
+	if (cpufreq_disabled())
+		return ret;
+
+	if (!cpufreq_driver->getavg)
+		return 0;
+
 	policy = cpufreq_cpu_get(policy->cpu);
 	if (!policy)
 		return -EINVAL;
 
-	if (cpu_online(cpu) && cpufreq_driver->getavg)
-		ret = cpufreq_driver->getavg(policy, cpu);
+	ret = cpufreq_driver->getavg(policy, cpu);
 
 	cpufreq_cpu_put(policy);
 	return ret;
@@ -1665,7 +1702,37 @@ static int __cpufreq_governor(struct cpufreq_policy *policy,
 
 	pr_debug("__cpufreq_governor for CPU %u, event %u\n",
 						policy->cpu, event);
+
+	mutex_lock(&cpufreq_governor_lock);
+	if ((!policy->governor_enabled && (event == CPUFREQ_GOV_STOP)) ||
+	    (policy->governor_enabled && (event == CPUFREQ_GOV_START))) {
+		mutex_unlock(&cpufreq_governor_lock);
+		return -EBUSY;
+	}
+
+	if (event == CPUFREQ_GOV_STOP)
+		policy->governor_enabled = false;
+	else if (event == CPUFREQ_GOV_START)
+		policy->governor_enabled = true;
+
+	mutex_unlock(&cpufreq_governor_lock);
+
 	ret = policy->governor->governor(policy, event);
+
+	if (!ret) {
+		if (event == CPUFREQ_GOV_POLICY_INIT)
+			policy->governor->initialized++;
+		else if (event == CPUFREQ_GOV_POLICY_EXIT)
+			policy->governor->initialized--;
+	} else {
+		/* Restore original values */
+		mutex_lock(&cpufreq_governor_lock);
+		if (event == CPUFREQ_GOV_STOP)
+			policy->governor_enabled = true;
+		else if (event == CPUFREQ_GOV_START)
+			policy->governor_enabled = false;
+		mutex_unlock(&cpufreq_governor_lock);
+	}
 
 	/* we keep one module reference alive for
 			each CPU governed by this CPU */
@@ -1690,6 +1757,7 @@ int cpufreq_register_governor(struct cpufreq_governor *governor)
 
 	mutex_lock(&cpufreq_governor_mutex);
 
+	governor->initialized = 0;
 	err = -EBUSY;
 	if (__find_governor(governor->name) == NULL) {
 		err = 0;
@@ -1771,7 +1839,7 @@ EXPORT_SYMBOL(cpufreq_get_policy);
 static int __cpufreq_set_policy(struct cpufreq_policy *data,
 				struct cpufreq_policy *policy)
 {
-	int ret = 0;
+	int ret = 0, failed = 1;
 
 	pr_debug("setting new policy for CPU %u: %u - %u kHz\n", policy->cpu,
 		policy->min, policy->max);
@@ -1779,7 +1847,8 @@ static int __cpufreq_set_policy(struct cpufreq_policy *data,
 	memcpy(&policy->cpuinfo, &data->cpuinfo,
 				sizeof(struct cpufreq_cpuinfo));
 
-	if (policy->min > data->user_policy.max || policy->max < data->user_policy.min) {
+	if ((policy->min > data->max || policy->max < data->min) &&
+		(policy->max < policy->min)) {
 		pr_debug("CPUFREQ: %s: pmin:%d, pmax:%d, min:%d, max:%d\n",
 			__func__, policy->min, policy->max, data->user_policy.min, data->user_policy.max);
 #ifndef CONFIG_SEC_PM
@@ -1829,17 +1898,35 @@ static int __cpufreq_set_policy(struct cpufreq_policy *data,
 			pr_debug("governor switch\n");
 
 			/* end old governor */
-			if (data->governor)
+			if (data->governor) {
 				__cpufreq_governor(data, CPUFREQ_GOV_STOP);
+				unlock_policy_rwsem_write(policy->cpu);
+				__cpufreq_governor(data,
+						CPUFREQ_GOV_POLICY_EXIT);
+				lock_policy_rwsem_write(policy->cpu);
+			}
 
 			/* start new governor */
 			data->governor = policy->governor;
-			if (__cpufreq_governor(data, CPUFREQ_GOV_START)) {
+			if (!__cpufreq_governor(data, CPUFREQ_GOV_POLICY_INIT)) {
+				if (!__cpufreq_governor(data, CPUFREQ_GOV_START)) {
+					failed = 0;
+				} else {
+					unlock_policy_rwsem_write(policy->cpu);
+					__cpufreq_governor(data,
+							CPUFREQ_GOV_POLICY_EXIT);
+					lock_policy_rwsem_write(policy->cpu);
+				}
+			}
+
+			if (failed) {
 				/* new governor failed, so re-start old one */
 				pr_debug("starting governor %s failed\n",
 							data->governor->name);
 				if (old_gov) {
 					data->governor = old_gov;
+					__cpufreq_governor(data,
+							CPUFREQ_GOV_POLICY_INIT);
 					__cpufreq_governor(data,
 							   CPUFREQ_GOV_START);
 				}
@@ -1868,10 +1955,17 @@ int cpufreq_update_policy(unsigned int cpu)
 	struct cpufreq_policy *data = cpufreq_cpu_get(cpu);
 	struct cpufreq_policy policy;
 	int ret;
+	int policy_cpu;
 
 	if (!data) {
 		ret = -ENODEV;
 		goto no_policy;
+	}
+
+	policy_cpu = per_cpu(cpufreq_policy_cpu, cpu);
+	if (policy_cpu == -1) {
+		ret = -ENODEV;
+		goto fail;
 	}
 
 	if (unlikely(lock_policy_rwsem_write(cpu))) {
@@ -1926,9 +2020,6 @@ static int __cpuinit cpufreq_cpu_callback(struct notifier_block *nfb,
 			break;
 		case CPU_DOWN_PREPARE:
 		case CPU_DOWN_PREPARE_FROZEN:
-			if (unlikely(lock_policy_rwsem_write(cpu)))
-				BUG();
-
 			__cpufreq_remove_dev(dev, NULL);
 			break;
 		case CPU_DOWN_FAILED:
@@ -1975,13 +2066,13 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
 	if (driver_data->setpolicy)
 		driver_data->flags |= CPUFREQ_CONST_LOOPS;
 
-	spin_lock_irqsave(&cpufreq_driver_lock, flags);
+	write_lock_irqsave(&cpufreq_driver_lock, flags);
 	if (cpufreq_driver) {
-		spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
+		write_unlock_irqrestore(&cpufreq_driver_lock, flags);
 		return -EBUSY;
 	}
 	cpufreq_driver = driver_data;
-	spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
+	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
 
 	ret = subsys_interface_register(&cpufreq_interface);
 	if (ret)
@@ -2013,9 +2104,9 @@ int cpufreq_register_driver(struct cpufreq_driver *driver_data)
 err_if_unreg:
 	subsys_interface_unregister(&cpufreq_interface);
 err_null_driver:
-	spin_lock_irqsave(&cpufreq_driver_lock, flags);
+	write_lock_irqsave(&cpufreq_driver_lock, flags);
 	cpufreq_driver = NULL;
-	spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
+	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
 	return ret;
 }
 EXPORT_SYMBOL_GPL(cpufreq_register_driver);
@@ -2041,9 +2132,9 @@ int cpufreq_unregister_driver(struct cpufreq_driver *driver)
 	subsys_interface_unregister(&cpufreq_interface);
 	unregister_hotcpu_notifier(&cpufreq_cpu_notifier);
 
-	spin_lock_irqsave(&cpufreq_driver_lock, flags);
+	write_lock_irqsave(&cpufreq_driver_lock, flags);
 	cpufreq_driver = NULL;
-	spin_unlock_irqrestore(&cpufreq_driver_lock, flags);
+	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
 
 	return 0;
 }

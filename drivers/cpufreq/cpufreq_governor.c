@@ -475,10 +475,6 @@ int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 			cs_dbs_info->down_skip = 0;
 			cs_dbs_info->enable = 1;
 			cs_dbs_info->requested_freq = policy->cur;
-		} else if (dbs_data->cdata->governor == GOV_ONDEMAND) {
-			od_dbs_info->rate_mult = 1;
-			od_dbs_info->sample_type = OD_NORMAL_SAMPLE;
-			od_ops->powersave_bias_init_cpu(cpu);
 		} else if (dbs_data->cdata->governor == GOV_ALUCARD) {
 			ac_ops->get_cpu_frequency_table(cpu);
 			ac_ops->get_cpu_frequency_table_minmax(policy, cpu);
@@ -488,6 +484,10 @@ int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 			dk_ops->get_cpu_frequency_table(cpu);
 		} else if (dbs_data->cdata->governor == GOV_NIGHTMARE) {
 			nm_ops->get_cpu_frequency_table(cpu);
+		} else {
+			od_dbs_info->rate_mult = 1;
+			od_dbs_info->sample_type = OD_NORMAL_SAMPLE;
+			od_ops->powersave_bias_init_cpu(cpu);
 		}
 
 		mutex_unlock(&dbs_data->mutex);

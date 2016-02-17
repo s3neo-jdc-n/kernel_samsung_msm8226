@@ -1665,7 +1665,7 @@ int __cpufreq_driver_target(struct cpufreq_policy *policy,
 	if (target_freq == policy->cur)
 		return 0;
 
-	if (cpufreq_driver->target)
+	if (cpu_online(policy->cpu) && cpufreq_driver->target)
 		retval = cpufreq_driver->target(policy, target_freq, relation);
 
 	return retval;
@@ -1703,7 +1703,7 @@ int __cpufreq_driver_getavg(struct cpufreq_policy *policy, unsigned int cpu)
 	if (cpufreq_disabled())
 		return ret;
 
-	if (!cpufreq_driver->getavg)
+	if (!(cpu_online(cpu) && cpufreq_driver->getavg))
 		return 0;
 
 	policy = cpufreq_cpu_get(policy->cpu);

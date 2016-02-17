@@ -1258,8 +1258,6 @@ static int __cpufreq_remove_dev(struct device *dev,
 					"cpufreq");
 			return -EINVAL;
 		}
-		blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
-				CPUFREQ_REMOVE_POLICY, data);
 
 		WARN_ON(lock_policy_rwsem_write(cpu));
 		update_policy_cpu(data, cpu_dev->id);
@@ -1272,6 +1270,9 @@ static int __cpufreq_remove_dev(struct device *dev,
 	if (cpus == 1) {
 		if (cpufreq_driver->target)
 			__cpufreq_governor(data, CPUFREQ_GOV_POLICY_EXIT);
+
+		blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
+				CPUFREQ_REMOVE_POLICY, data);
 
 		lock_policy_rwsem_read(cpu);
 		kobj = &data->kobj;

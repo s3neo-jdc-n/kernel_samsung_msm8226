@@ -526,10 +526,6 @@ int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 		else if (policy->min > cpu_cdbs->cur_policy->cur)
 			__cpufreq_driver_target(cpu_cdbs->cur_policy,
 					policy->min, CPUFREQ_RELATION_L);
-		if (dbs_data->cdata->governor == GOV_ALUCARD) {
-			ac_ops->get_cpu_frequency_table_minmax(cpu_cdbs->cur_policy,
-				cpu);
-		}
 		dbs_check_cpu(dbs_data, cpu);
 		mutex_unlock(&cpu_cdbs->timer_mutex);
 		mutex_unlock(&dbs_data->mutex);

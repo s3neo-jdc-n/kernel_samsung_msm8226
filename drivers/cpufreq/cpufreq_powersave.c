@@ -10,10 +10,11 @@
  *
  */
 
-#include <linux/kernel.h>
-#include <linux/module.h>
+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
 #include <linux/cpufreq.h>
 #include <linux/init.h>
+#include <linux/module.h>
 
 static int cpufreq_governor_powersave(struct cpufreq_policy *policy,
 					unsigned int event)

@@ -180,7 +180,7 @@ static int maple_cpufreq_cpu_init(struct cpufreq_policy *policy)
 	/* secondary CPUs are tied to the primary one by the
 	 * cpufreq core if in the secondary policy we tell it that
 	 * it actually must be one policy together with all others. */
-	cpumask_copy(policy->cpus, cpu_online_mask);
+	cpumask_setall(policy->cpus);
 	cpufreq_frequency_table_get_attr(maple_cpu_freqs, policy->cpu);
 
 	return cpufreq_frequency_table_cpuinfo(policy,
@@ -190,7 +190,6 @@ static int maple_cpufreq_cpu_init(struct cpufreq_policy *policy)
 
 static struct cpufreq_driver maple_cpufreq_driver = {
 	.name		= "maple",
-	.owner		= THIS_MODULE,
 	.flags		= CPUFREQ_CONST_LOOPS,
 	.init		= maple_cpufreq_cpu_init,
 	.verify		= maple_cpufreq_verify,

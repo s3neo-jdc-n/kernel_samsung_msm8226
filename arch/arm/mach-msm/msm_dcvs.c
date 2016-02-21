@@ -145,8 +145,17 @@ static struct dentry		*debugfs_base;
 static struct dcvs_core core_list[CORES_MAX];
 
 static struct kobject *cores_kobj;
-
-#define DCVS_MAX_NUM_FREQS 15
+#ifdef CONFIG_CPU_UNDERCLOCK
+#define UC_EXTRA_FREQS	2
+#else
+#define UC_EXTRA_FREQS	0
+#endif
+#ifdef CONFIG_CPU_OVERCLOCK
+#define OC_EXTRA_FREQS	2
+#else
+#define OC_EXTRA_FREQS	0
+#endif
+#define DCVS_MAX_NUM_FREQS (15 + UC_EXTRA_FREQS + OC_EXTRA_FREQS)
 static struct msm_dcvs_freq_entry cpu_freq_tbl[DCVS_MAX_NUM_FREQS];
 static unsigned num_cpu_freqs;
 static struct msm_dcvs_platform_data *dcvs_pdata;

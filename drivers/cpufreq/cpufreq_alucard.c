@@ -16,19 +16,10 @@
  * Created by Alucard_24@xda
  */
 
-#include <linux/cpufreq.h>
-#include <linux/init.h>
-#include <linux/kernel.h>
-#include <linux/kernel_stat.h>
-#include <linux/kobject.h>
-#include <linux/module.h>
-#include <linux/mutex.h>
-#include <linux/notifier.h>
+#include <linux/cpu.h>
 #include <linux/percpu-defs.h>
 #include <linux/slab.h>
-#include <linux/sysfs.h>
-#include <linux/types.h>
-
+#include <linux/tick.h>
 #include "cpufreq_governor.h"
 
 /* alucard governor macros */
@@ -63,6 +54,12 @@ struct ac_pump_cpu_parm {
 
 static DEFINE_PER_CPU(struct ac_cpu_dbs_info_s, ac_cpu_dbs_info);
 static DEFINE_PER_CPU(struct ac_pump_cpu_parm, od_ac_pump_cpu_parm);
+
+static struct ac_ops ac_ops;
+
+#ifndef CONFIG_CPU_FREQ_DEFAULT_GOV_ALUCARD
+static struct cpufreq_governor cpufreq_gov_alucard;
+#endif
 
 static void alucard_get_cpu_frequency_table(int cpu)
 {
@@ -299,10 +296,72 @@ define_one_global_rw(pump_dec_step_2);
 define_one_global_rw(pump_dec_step_3);
 define_one_global_rw(pump_dec_step_4);
 
+/**
+ * update_sampling_rate - update sampling rate effective immediately if needed.
+ * @new_rate: new sampling rate
+ *
+ * If new rate is smaller than the old, simply updating
+ * dbs_tuners_int.sampling_rate might not be appropriate. For example, if the
+ * original sampling_rate was 1 second and the requested new sampling rate is 10
+ * ms because the user needs immediate reaction from ondemand governor, but not
+ * sure if higher frequency will be required or not, then, the governor may
+ * change the sampling rate too late; up to 1 second later. Thus, if we are
+ * reducing the sampling rate, we need to make the new value effective
+ * immediately.
+ */
+static void update_sampling_rate(struct dbs_data *dbs_data,
+		unsigned int new_rate)
+{
+	struct ac_dbs_tuners *ac_tuners = dbs_data->tuners;
+	int cpu;
+
+	ac_tuners->sampling_rate = new_rate = max(new_rate,
+			dbs_data->min_sampling_rate);
+
+	get_online_cpus();
+	for_each_online_cpu(cpu) {
+		struct cpufreq_policy *policy;
+		struct ac_cpu_dbs_info_s *dbs_info;
+		unsigned long next_sampling, appointed_at;
+
+		policy = cpufreq_cpu_get(cpu);
+		if (!policy)
+			continue;
+		if (policy->governor != &cpufreq_gov_alucard) {
+			cpufreq_cpu_put(policy);
+			continue;
+		}
+		dbs_info = &per_cpu(ac_cpu_dbs_info, cpu);
+		cpufreq_cpu_put(policy);
+
+		mutex_lock(&dbs_info->cdbs.timer_mutex);
+
+		if (!delayed_work_pending(&dbs_info->cdbs.work)) {
+			mutex_unlock(&dbs_info->cdbs.timer_mutex);
+			continue;
+		}
+
+		next_sampling = jiffies + usecs_to_jiffies(new_rate);
+		appointed_at = dbs_info->cdbs.work.timer.expires;
+
+		if (time_before(next_sampling, appointed_at)) {
+
+			mutex_unlock(&dbs_info->cdbs.timer_mutex);
+			cancel_delayed_work_sync(&dbs_info->cdbs.work);
+			mutex_lock(&dbs_info->cdbs.timer_mutex);
+
+			gov_queue_work(dbs_data, dbs_info->cdbs.cur_policy,
+					usecs_to_jiffies(new_rate), true);
+
+		}
+		mutex_unlock(&dbs_info->cdbs.timer_mutex);
+	}
+	put_online_cpus();
+}
+
 static ssize_t store_sampling_rate(struct dbs_data *dbs_data, const char *buf,
 		size_t count)
 {
-	struct ac_dbs_tuners *ac_tuners = dbs_data->tuners;
 	unsigned int input;
 	int ret = 0;
 	int mpd = strcmp(current->comm, "mpdecision");
@@ -315,7 +374,7 @@ static ssize_t store_sampling_rate(struct dbs_data *dbs_data, const char *buf,
 	if (ret != 1)
 		return -EINVAL;
 
-	ac_tuners->sampling_rate = max(input, dbs_data->min_sampling_rate);
+	update_sampling_rate(dbs_data, input);
 	return count;
 }
 
@@ -615,8 +674,8 @@ static int ac_init(struct dbs_data *dbs_data)
 		this_cpu_parm->pump_dec_step_at_min_freq = PUMP_DEC_STEP_AT_MIN_FREQ;
 	}
 
-	tuners->sampling_rate = DEF_SAMPLING_RATE;
 	dbs_data->min_sampling_rate = MIN_SAMPLING_RATE;
+	tuners->sampling_rate = DEF_SAMPLING_RATE;
 	tuners->ignore_nice_load = 0;
 	tuners->inc_cpu_load_at_min_freq = INC_CPU_LOAD_AT_MIN_FREQ;
 	tuners->inc_cpu_load = INC_CPU_LOAD;

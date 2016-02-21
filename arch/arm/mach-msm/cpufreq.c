@@ -283,7 +283,7 @@ static int msm_cpufreq_target(struct cpufreq_policy *policy,
 	cpu_work = &per_cpu(cpufreq_work, policy->cpu);
 	cpu_work->policy = policy;
 	cpu_work->frequency = table[index].frequency;
-	cpu_work->index = table[index].index;
+	cpu_work->index = table[index].driver_data;
 	cpu_work->status = -ENODEV;
 
 	cancel_work_sync(&cpu_work->work);
@@ -348,7 +348,7 @@ static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 		return 0;
 #endif
 
-	if (cpufreq_frequency_table_cpuinfo(policy, table)) {
+	if (cpufreq_frequency_table_cpuinfo(policy, table)) {		
 #ifdef CONFIG_MSM_CPU_FREQ_SET_MIN_MAX
 		policy->cpuinfo.min_freq = CONFIG_MSM_CPU_FREQ_MIN;
 		policy->cpuinfo.max_freq = CONFIG_MSM_CPU_FREQ_MAX;
@@ -357,14 +357,9 @@ static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 #ifdef CONFIG_MSM_CPU_FREQ_SET_MIN_MAX
 	policy->min = CONFIG_MSM_CPU_FREQ_MIN;
 	policy->max = CONFIG_MSM_CPU_FREQ_MAX;
-#endif
-#ifdef CONFIG_SEC_DVFS
-	cpuinfo_max_freq = policy->cpuinfo.max_freq;
-	cpuinfo_min_freq = policy->cpuinfo.min_freq;
-	/*For debugging
-	pr_info("cpufreq: cpuinfo_max_freq: %d\n", cpuinfo_max_freq);
-	pr_info("cpufreq: cpuinfo_min_freq: %d\n", cpuinfo_min_freq);
-	*/
+#else
+	policy->min = MIN_FREQ_LIMIT;
+	policy->max = MAX_FREQ_LIMIT;
 #endif
 
 	if (is_clk)
@@ -384,7 +379,7 @@ static int __cpuinit msm_cpufreq_init(struct cpufreq_policy *policy)
 	 * Call set_cpu_freq unconditionally so that when cpu is set to
 	 * online, frequency limit will always be updated.
 	 */
-	ret = set_cpu_freq(policy, table[index].frequency, table[index].index);
+	ret = set_cpu_freq(policy, table[index].frequency, table[index].driver_data);
 	if (ret)
 		return ret;
 	pr_debug("cpufreq: cpu%d init at %d switching to %d\n",
@@ -568,7 +563,7 @@ static int cpufreq_parse_dt(struct device *dev)
 		if (i > 0 && f <= freq_table[i-1].frequency)
 			break;
 
-		freq_table[i].index = i;
+		freq_table[i].driver_data = i;
 		freq_table[i].frequency = f;
 
 		if (l2_clk) {
@@ -586,7 +581,7 @@ static int cpufreq_parse_dt(struct device *dev)
 		mem_bw[i] = data[j++];
 	}
 
-	freq_table[i].index = i;
+	freq_table[i].driver_data = i;
 	freq_table[i].frequency = CPUFREQ_TABLE_END;
 
 	devm_kfree(dev, data);

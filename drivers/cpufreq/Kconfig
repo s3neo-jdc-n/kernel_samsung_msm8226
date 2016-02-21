@@ -20,15 +20,11 @@ config SEC_DVFS
 	depends on CPU_FREQ
 if CPU_FREQ
 
-config CPU_FREQ_TABLE
-	tristate
-
 config CPU_FREQ_GOV_COMMON
 	bool
 
 config CPU_FREQ_STAT
 	tristate "CPU frequency translation statistics"
-	select CPU_FREQ_TABLE
 	default y
 	help
 	  This driver exports CPU frequency statistics information through sysfs
@@ -56,14 +52,13 @@ config CPU_FREQ_LIMIT
 
 config MULTI_CPU_POLICY_LIMIT
 	bool "Enable functions extended by all_cpus declaration for reflecting policy limits on all cpus"
-	depends on (!UNI_CPU_POLICY_LIMIT)
 	default n
 	help
 	  Functions extended by all_cpus declaration to reflect policy limits on all cpus
 
 choice
 	prompt "Default CPUFreq governor"
-	default CPU_FREQ_DEFAULT_GOV_USERSPACE if CPU_FREQ_SA1100 || CPU_FREQ_SA1110
+	default CPU_FREQ_DEFAULT_GOV_USERSPACE if ARM_SA1100_CPUFREQ || ARM_SA1110_CPUFREQ
 	default CPU_FREQ_DEFAULT_GOV_PERFORMANCE
 	help
 	  This option sets which CPUFreq governor shall be loaded at
@@ -211,7 +206,6 @@ config CPU_FREQ_GOV_USERSPACE
 
 config CPU_FREQ_GOV_ONDEMAND
 	tristate "'ondemand' cpufreq policy governor"
-	select CPU_FREQ_TABLE
 	select CPU_FREQ_GOV_COMMON
 	help
 	  'ondemand' - This driver adds a dynamic cpufreq policy governor.
@@ -273,7 +267,6 @@ config CPU_FREQ_GOV_CONSERVATIVE
 config CPU_FREQ_GOV_BIOSHOCK
 	tristate "'bioshock' cpufreq bioshock"
 	depends on CPU_FREQ
-	select CPU_FREQ_TABLE
 	select CPU_FREQ_GOV_COMMON
 	help
 'bioshock' - More aggressive version of conservative
@@ -297,13 +290,11 @@ config CPU_FREQ_GOV_ALUCARD
 config CPU_FREQ_GOV_DARKNESS
 	tristate "'darkness' cpufreq governor"
 	depends on CPU_FREQ
-	select CPU_FREQ_TABLE
 	select CPU_FREQ_GOV_COMMON
 
 config CPU_FREQ_GOV_NIGHTMARE
 	tristate "'nightmare' cpufreq governor"
 	depends on CPU_FREQ
-	select CPU_FREQ_TABLE
 	select CPU_FREQ_GOV_COMMON
 
 config CPU_FREQ_GOV_SMARTASS2
@@ -331,6 +322,28 @@ config CPU_FREQ_GOV_INTELLIDEMAND
           For details, take a look at linux/Documentation/cpu-freq.
 
 		  If in doubt, say N.
+
+config CPU_BOOST
+	tristate "Event base short term CPU freq boost"
+	depends on CPU_FREQ
+	help
+	  This driver boosts the frequency of one or more CPUs based on
+	  various events that might occur in the system. As of now, the
+	  events it reacts to are:
+	  - Migration of important threads from one CPU to another.
+
+	  If in doubt, say N.
+
+config CPU_BOOST
+	tristate "Event base short term CPU freq boost"
+	depends on CPU_FREQ
+	help
+	  This driver boosts the frequency of one or more CPUs based on
+	  various events that might occur in the system. As of now, the
+	  events it reacts to are:
+	  - Migration of important threads from one CPU to another.
+
+	  If in doubt, say N.
 
 menu "x86 CPU frequency scaling drivers"
 depends on X86

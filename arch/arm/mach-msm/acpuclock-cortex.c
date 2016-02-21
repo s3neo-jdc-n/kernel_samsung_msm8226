@@ -40,6 +40,19 @@
 #define POLL_INTERVAL_US		1
 #define APCS_RCG_UPDATE_TIMEOUT_US	20
 
+#ifdef CONFIG_CPU_UNDERCLOCK
+#define UC_EXTRA_FREQS	2
+#else
+#define UC_EXTRA_FREQS	0
+#endif
+#ifdef CONFIG_CPU_OVERCLOCK
+#define OC_EXTRA_FREQS	2
+#else
+#define OC_EXTRA_FREQS	0
+#endif
+
+#define FREQ_TABLE_SIZE	(35 + UC_EXTRA_FREQS + OC_EXTRA_FREQS)
+
 static struct acpuclk_drv_data *priv;
 static uint32_t bus_perf_client;
 #ifdef CONFIG_SEC_DEBUG_VERBOSE_SUMMARY_HTML
@@ -372,14 +385,14 @@ static void __init cpufreq_table_init(void)
 			&& freq_cnt < ARRAY_SIZE(freq_table) - 1; i++) {
 		if (!priv->freq_tbl[i].use_for_scaling)
 			continue;
-		freq_table[freq_cnt].index = freq_cnt;
+		freq_table[freq_cnt].driver_data = freq_cnt;
 		freq_table[freq_cnt].frequency = priv->freq_tbl[i].khz;
 		freq_cnt++;
 	}
 	/* freq_table not big enough to store all usable freqs. */
 	BUG_ON(priv->freq_tbl[i].khz != 0);
 
-	freq_table[freq_cnt].index = freq_cnt;
+	freq_table[freq_cnt].driver_data = freq_cnt;
 	freq_table[freq_cnt].frequency = CPUFREQ_TABLE_END;
 
 	pr_info("CPU: %d scaling frequencies supported.\n", freq_cnt);

@@ -16,17 +16,9 @@
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
-#include <asm/cputime.h>
-#include <linux/cpufreq.h>
-#include <linux/cpumask.h>
 #include <linux/export.h>
 #include <linux/kernel_stat.h>
-#include <linux/mutex.h>
 #include <linux/slab.h>
-#include <linux/tick.h>
-#include <linux/types.h>
-#include <linux/workqueue.h>
-#include <linux/cpu.h>
 
 #include "cpufreq_governor.h"
 
@@ -36,28 +28,6 @@ static struct attribute_group *get_sysfs_attr(struct dbs_data *dbs_data)
 		return dbs_data->cdata->attr_group_gov_pol;
 	else
 		return dbs_data->cdata->attr_group_gov_sys;
-}
-
-static inline u64 get_cpu_idle_time_jiffy(unsigned int cpu, u64 *wall)
-{
-	u64 idle_time;
-	u64 cur_wall_time;
-	u64 busy_time;
-
-	cur_wall_time = jiffies64_to_cputime64(get_jiffies_64());
-
-	busy_time = kcpustat_cpu(cpu).cpustat[CPUTIME_USER];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SYSTEM];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_IRQ];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SOFTIRQ];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_STEAL];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_NICE];
-
-	idle_time = cur_wall_time - busy_time;
-	if (wall)
-		*wall = cputime_to_usecs(cur_wall_time);
-
-	return cputime_to_usecs(idle_time);
 }
 
 void dbs_check_cpu(struct dbs_data *dbs_data, int cpu)
@@ -351,6 +321,9 @@ int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 			return rc;
 		}
 
+		if (!have_governor_per_policy())
+			WARN_ON(cpufreq_get_global_kobject());
+
 		rc = sysfs_create_group(get_governor_parent_kobj(policy),
 				get_sysfs_attr(dbs_data));
 		if (rc) {
@@ -388,6 +361,9 @@ int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 		if (!--dbs_data->usage_count) {
 			sysfs_remove_group(get_governor_parent_kobj(policy),
 					get_sysfs_attr(dbs_data));
+
+			if (!have_governor_per_policy())
+				cpufreq_put_global_kobject();
 
 			if ((dbs_data->cdata->governor == GOV_CONSERVATIVE) &&
 				(policy->governor->initialized == 1)) {

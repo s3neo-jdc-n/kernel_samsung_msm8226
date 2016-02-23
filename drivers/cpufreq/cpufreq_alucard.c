@@ -53,7 +53,7 @@ struct ac_pump_cpu_parm {
 };
 
 static DEFINE_PER_CPU(struct ac_cpu_dbs_info_s, ac_cpu_dbs_info);
-static DEFINE_PER_CPU(struct ac_pump_cpu_parm, od_ac_pump_cpu_parm);
+static DEFINE_PER_CPU_SHARED_ALIGNED(struct ac_pump_cpu_parm, od_ac_pump_cpu_parm);
 
 static struct ac_ops ac_ops;
 

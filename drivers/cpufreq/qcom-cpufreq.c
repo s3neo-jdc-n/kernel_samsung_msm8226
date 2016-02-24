@@ -34,8 +34,6 @@
 
 #include "../../arch/arm/mach-msm/acpuclock.h"
 
-static DEFINE_MUTEX(l2bw_lock);
-
 static struct clk *cpu_clk[NR_CPUS];
 static struct clk *l2_clk;
 static struct cpufreq_frequency_table *freq_table;

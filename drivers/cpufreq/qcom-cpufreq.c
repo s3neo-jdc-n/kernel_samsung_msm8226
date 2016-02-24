@@ -34,7 +34,7 @@
 #include <mach/socinfo.h>
 #include <mach/cpufreq.h>
 
-#include "acpuclock.h"
+#include "../../arch/arm/mach-msm/acpuclock.h"
 
 #ifdef CONFIG_DEBUG_FS
 #include <linux/debugfs.h>

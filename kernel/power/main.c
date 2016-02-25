@@ -868,21 +868,18 @@ int set_freq_limit(unsigned long id, unsigned int freq)
 	/* need to update now */
 	if (id & UPDATE_NOW_BITS) {
 		int cpu;
-		unsigned int cur = 0;
 
 		for_each_online_cpu(cpu) {
-			cur = cpufreq_quick_get(cpu);
-			if (cur) {
-				struct cpufreq_policy policy;
-				policy.cpu = cpu;
-
-				if (cur < min)
-					cpufreq_driver_target(&policy,
-						min, CPUFREQ_RELATION_H);
-				else if (cur > max)
-					cpufreq_driver_target(&policy,
-						max, CPUFREQ_RELATION_L);
-			}
+			struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
+			if (!policy)
+				continue;
+			if (policy->cur < min && policy->cur > 0)
+				cpufreq_driver_target(policy,
+					min, CPUFREQ_RELATION_H);
+			else if (policy->cur > max && policy->cur > 0)
+				cpufreq_driver_target(policy,
+					max, CPUFREQ_RELATION_L);
+			cpufreq_cpu_put(policy);
 		}
 	}
 

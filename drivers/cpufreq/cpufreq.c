@@ -1025,6 +1025,7 @@ static ssize_t show_bios_limit(struct cpufreq_policy *policy, char *buf)
 
 #ifdef CONFIG_CPU_VOLTAGE_TABLE
 
+extern ssize_t acpuclk_get_vdd_levels_str(char *buf);
 extern void acpuclk_set_vdd(unsigned acpu_khz, int vdd);
 
 static ssize_t show_vdd_levels(struct kobject *a, struct attribute *b, char *buf) {
@@ -1108,6 +1109,18 @@ define_one_global_rw(vdd_levels);
 define_one_global_rw(scaling_min_freq_all_cpus);
 define_one_global_rw(scaling_max_freq_all_cpus);
 define_one_global_rw(scaling_governor_all_cpus);
+define_one_global_rw(scaling_min_freq_cpu0);
+define_one_global_rw(scaling_min_freq_cpu1);
+define_one_global_rw(scaling_min_freq_cpu2);
+define_one_global_rw(scaling_min_freq_cpu3);
+define_one_global_rw(scaling_max_freq_cpu0);
+define_one_global_rw(scaling_max_freq_cpu1);
+define_one_global_rw(scaling_max_freq_cpu2);
+define_one_global_rw(scaling_max_freq_cpu3);
+define_one_global_rw(scaling_governor_cpu0);
+define_one_global_rw(scaling_governor_cpu1);
+define_one_global_rw(scaling_governor_cpu2);
+define_one_global_rw(scaling_governor_cpu3);
 #endif
 
 static struct attribute *default_attrs[] = {
@@ -2835,22 +2848,23 @@ static int __init cpufreq_core_init(void)
 	if (cpufreq_disabled())
 		return -ENODEV;
 
-	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
+	cpufreq_global_kobject = kobject_create();
 	BUG_ON(!cpufreq_global_kobject);
 	register_syscore_ops(&cpufreq_syscore_ops);
+
 #ifdef CONFIG_CPU_VOLTAGE_TABLE
 	rc = sysfs_create_group(cpufreq_global_kobject, &vddtbl_attr_group);
-#endif	/* CONFIG_CPU_VOLTAGE_TABLE *//
+	if (rc) {
+		pr_err("%s: Unable to create vddtbl_attr_group.\n",
+			__func__);
+	}
+#endif	/* CONFIG_CPU_VOLTAGE_TABLE */
 
 #ifdef CONFIG_MULTI_CPU_POLICY_LIMIT
-	rc = cpufreq_get_global_kobject();
-	if (!rc) {
 	rc = sysfs_create_group(cpufreq_global_kobject, &all_cpus_attr_group);
 	if (rc) {
 		pr_err("%s: Unable to create all_cpus_attr_group.\n",
 			__func__);
-			cpufreq_put_global_kobject();
-		}
 	}
 #endif	/* CONFIG_MULTI_CPU_POLICY_LIMIT */
 

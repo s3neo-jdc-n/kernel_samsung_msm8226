@@ -374,19 +374,8 @@ static unsigned int acpuclk_cortex_get_voltage(int cpu)
 
 #ifdef CONFIG_CPU_VOLTAGE_TABLE
 
-#define MAX_VDD_CPU		 700
-#define MIN_VDD_CPU		1300
-
-int get_num_freqs(void)
-{
-	int i;
-	int count = 0;
-
-	for (i = 0; priv->freq_tbl[i].use_for_scaling; i++)
-		count++;
-
-	return count;
-}
+#define MAX_VDD_CPU		1300000
+#define MIN_VDD_CPU		 600000
 
 ssize_t acpuclk_get_vdd_levels_str(char *buf)
 {
@@ -394,47 +383,48 @@ ssize_t acpuclk_get_vdd_levels_str(char *buf)
 	int i, len = 0;
 
 	if (buf) {
+
+		mutex_lock(&priv->lock);
+
 		for (i = 0; priv->freq_tbl[i].khz; i++) {
 			if (priv->freq_tbl[i].use_for_scaling) {
-				len += sprintf(buf + len, "%umhz: %i mV\n", priv->freq_tbl[i].khz/1000,
-					priv->freq_tbl[i].vdd_cpu/1000);
+				len += sprintf(buf + len, "%8u: %8d\n", priv->freq_tbl[i].khz,
+					priv->freq_tbl[i].vdd_cpu);
 			}
+
+		mutex_unlock(&priv->lock);
+
 		}
 	}
 	return len;
 }
 
-ssize_t acpuclk_set_vdd(char *buf)
-{
-	unsigned int cur_volt;
-	char size_cur[get_num_freqs()];
+void acpuclk_set_vdd(unsigned int khz, int vdd_uv) {
+
 	int i;
-	int ret = 0;
+	unsigned int new_vdd_uv;
 
-	if (buf) {
-		for (i = 0; priv->freq_tbl[i].use_for_scaling; i++) {
-			ret = sscanf(buf, "%d", &cur_volt);
+	mutex_lock(&priv->lock);
 
-			if (ret != 1)
-				return -EINVAL;
+	for (i = 0; priv->freq_tbl[i].khz; i++) {
+		if (khz == 0)
+			new_vdd_uv = min(max((unsigned int)(priv->freq_tbl[i].vdd_cpu + vdd_uv),
+				(unsigned int)MIN_VDD_CPU), (unsigned int)MAX_VDD_CPU);
+		else if ( priv->freq_tbl[i].khz == khz)
+			new_vdd_uv = min(max((unsigned int)vdd_uv,
+				(unsigned int)MIN_VDD_CPU), (unsigned int)MAX_VDD_CPU);
+		else 
+			continue;
 
-			if (cur_volt > MAX_VDD_CPU || cur_volt < MIN_VDD_CPU) {
-				printk("Voltage Control: You have set a voltage which is out of range: %i mV !\n", cur_volt);
-				return -EINVAL;
-			}
-
-			priv->freq_tbl[i].vdd_cpu = cur_volt*1000;
-
-			ret = sscanf(buf, "%s", size_cur);
-			buf += (strlen(size_cur)+1);
-		}
+		mutex_unlock(&priv->lock);
+		priv->freq_tbl[i].vdd_cpu = new_vdd_uv;
 	}
-	return ret;
+	pr_err("faux123: user voltage table modified!\n");
 }
 #endif	/* CONFIG_CPU_VOTALGE_TABLE */
 
 #ifdef CONFIG_CPU_FREQ_MSM
-static struct cpufreq_frequency_table freq_table[30];
+static struct cpufreq_frequency_table freq_table[FREQ_TABLE_SIZE];
 
 static void __init cpufreq_table_init(void)
 {
@@ -475,6 +465,10 @@ static struct acpuclk_data acpuclk_cortex_data = {
 
 void __init get_speed_bin(void __iomem *base, struct bin_info *bin)
 {
+#if defined(CONFIG_CPU_OVERCLOCK) || defined(CONFIG_CPU_UNDERCLOCK)
+	bin->speed = 1;
+	bin->speed_valid = true;
+#else
 	u32 pte_efuse, redundant_sel;
 
 	pte_efuse = readl_relaxed(base);
@@ -485,6 +479,7 @@ void __init get_speed_bin(void __iomem *base, struct bin_info *bin)
 		bin->speed = (pte_efuse >> 27) & 0x7;
 
 	bin->speed_valid = !!(pte_efuse & BIT(3));
+#endif
 }
 
 static struct clkctl_acpu_speed *__init select_freq_plan(void)

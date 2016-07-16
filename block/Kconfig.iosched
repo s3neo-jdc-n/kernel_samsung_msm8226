@@ -79,7 +79,10 @@ config IOSCHED_TRIPNDROID
 	  The TripNDroid IO Scheduler is based on noop, deadline and vr
 	  it uses deadlines to ensure some fairness. The scheduler is build
 	  to keep a minimum overhead. It is mainly build for mobile devices.
-	  
+
+config IOSCHED_MAPLE
+	tristate "Maple I/O scheduler"
+	default y
 	  
 config IOSCHED_CFQ
 	tristate "CFQ I/O scheduler"
@@ -175,12 +178,12 @@ choice
 	config DEFAULT_ZEN
 		bool "ZEN" if IOSCHED_ZEN=y
 		
-		
-
 	config DEFAULT_SIO
 	    bool "SIO" if IOSCHED_SIO=y
 		
-		
+	config DEFAULT_MAPLE
+		bool "Maple" if IOSCHED_MAPLE=y
+
 	config DEFAULT_SIOPLUS
 		bool "SIOPLUS" if IOSCHED_SIOPLUS=y
 	
@@ -204,6 +207,7 @@ config DEFAULT_IOSCHED
 	default "sio" if DEFAULT_SIO
 	default "sioplus" if DEFAULT_SIOPLUS
 	default "tripndroid" if DEFAULT_TRIPNDROID
+	default "maple" if DEFAULT_MAPLE
 
 endmenu
 

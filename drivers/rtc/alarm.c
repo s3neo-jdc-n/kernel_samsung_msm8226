@@ -73,6 +73,23 @@ static bool suspended;
 static long power_on_alarm;
 struct alarm *wakeup_alarm;
 
+static void alarm_shutdown(struct platform_device *dev);
+void set_power_on_alarm(long secs, bool enable)
+{
+	if (enable) {
+		power_on_alarm = secs;
+	} else {
+		if (power_on_alarm && power_on_alarm != secs) {
+			pr_alarm(FLOW, "power-off alarm mismatch: \
+				previous=%ld, now=%ld\n",
+				power_on_alarm, secs);
+		}
+		else
+			power_on_alarm = 0;
+	}
+	alarm_shutdown(NULL);
+}
+
 
 static void update_timer_locked(struct alarm_queue *base, bool head_removed)
 {
@@ -156,6 +173,22 @@ static void alarm_enqueue_locked(struct alarm *alarm)
 	rb_insert_color(&alarm->node, &base->alarms);
 }
 
+/**
+ * alarm_init - initialize an alarm
+ * @alarm:	the alarm to be initialized
+ * @type:	the alarm type to be used
+ * @function:	alarm callback function
+ */
+void alarm_init(struct alarm *alarm,
+	enum android_alarm_type type, void (*function)(struct alarm *))
+{
+	RB_CLEAR_NODE(&alarm->node);
+	alarm->type = type;
+	alarm->function = function;
+
+	pr_alarm(FLOW, "created alarm, type %d, func %pF\n", type, function);
+}
+
 
 /**
  * alarm_start_range - (re)start an alarm
@@ -172,6 +205,64 @@ void alarm_start_range(struct alarm *alarm, ktime_t start, ktime_t end)
 	alarm->expires = end;
 	alarm_enqueue_locked(alarm);
 	spin_unlock_irqrestore(&alarm_slock, flags);
+}
+
+/**
+ * alarm_try_to_cancel - try to deactivate an alarm
+ * @alarm:	alarm to stop
+ *
+ * Returns:
+ *  0 when the alarm was not active
+ *  1 when the alarm was active
+ * -1 when the alarm may currently be excuting the callback function and
+ *    cannot be stopped (it may also be inactive)
+ */
+int alarm_try_to_cancel(struct alarm *alarm)
+{
+	struct alarm_queue *base = &alarms[alarm->type];
+	unsigned long flags;
+	bool first = false;
+	int ret = 0;
+
+	spin_lock_irqsave(&alarm_slock, flags);
+	if (!RB_EMPTY_NODE(&alarm->node)) {
+		pr_alarm(FLOW, "canceled alarm, type %d, func %pF at %lld\n",
+			alarm->type, alarm->function,
+			ktime_to_ns(alarm->expires));
+		ret = 1;
+		if (base->first == &alarm->node) {
+			base->first = rb_next(&alarm->node);
+			first = true;
+		}
+		rb_erase(&alarm->node, &base->alarms);
+		RB_CLEAR_NODE(&alarm->node);
+		if (first)
+			update_timer_locked(base, true);
+	} else
+		pr_alarm(FLOW, "tried to cancel alarm, type %d, func %pF\n",
+			alarm->type, alarm->function);
+	spin_unlock_irqrestore(&alarm_slock, flags);
+	if (!ret && hrtimer_callback_running(&base->timer))
+		ret = -1;
+	return ret;
+}
+
+/**
+ * alarm_cancel - cancel an alarm and wait for the handler to finish.
+ * @alarm:	the alarm to be cancelled
+ *
+ * Returns:
+ *  0 when the alarm was not active
+ *  1 when the alarm was active
+ */
+int alarm_cancel(struct alarm *alarm)
+{
+	for (;;) {
+		int ret = alarm_try_to_cancel(alarm);
+		if (ret >= 0)
+			return ret;
+		cpu_relax();
+	}
 }
 
 /**
@@ -557,8 +648,11 @@ static void alarm_shutdown(struct platform_device *dev)
 
 	spin_lock_irqsave(&alarm_slock, flags);
 
-	if (!power_on_alarm)
+	if (!power_on_alarm) {
+		spin_unlock_irqrestore(&alarm_slock, flags);
 		goto disable_alarm;
+	}
+	spin_unlock_irqrestore(&alarm_slock, flags);
 
 	rtc_read_time(alarm_rtc_dev, &rtc_time);
 	getnstimeofday(&wall_time);
@@ -585,13 +679,10 @@ static void alarm_shutdown(struct platform_device *dev)
 	else
 		pr_alarm(FLOW, "Power-on alarm set to %lu\n",
 				alarm_time);
-
-	spin_unlock_irqrestore(&alarm_slock, flags);
 	return;
 
 disable_alarm:
 	rtc_alarm_irq_enable(alarm_rtc_dev, 0);
-	spin_unlock_irqrestore(&alarm_slock, flags);
 }
 
 static struct rtc_task alarm_rtc_task = {

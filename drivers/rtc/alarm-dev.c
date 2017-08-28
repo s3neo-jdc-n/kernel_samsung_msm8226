@@ -106,6 +106,7 @@ static long alarm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			if (!copy_from_user(&new_alarm_time,
 				(void __user *)arg, sizeof(new_alarm_time)))
 				set_power_on_alarm(new_alarm_time.tv_sec, 0);
+		spin_unlock_irqrestore(&alarm_slock, flags);
 		break;
 
 	case ANDROID_ALARM_SET_OLD:
@@ -136,6 +137,7 @@ from_old_alarm_set:
 				(ANDROID_ALARM_BASE_CMD(cmd) ==
 				 ANDROID_ALARM_SET(0)))
 			set_power_on_alarm(new_alarm_time.tv_sec, 1);
+		spin_unlock_irqrestore(&alarm_slock, flags);
 		if (ANDROID_ALARM_BASE_CMD(cmd) != ANDROID_ALARM_SET_AND_WAIT(0)
 		    && cmd != ANDROID_ALARM_SET_AND_WAIT_OLD)
 			break;

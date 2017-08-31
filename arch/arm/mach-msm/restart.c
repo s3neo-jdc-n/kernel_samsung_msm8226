@@ -124,6 +124,7 @@ static bool get_dload_mode(void)
 }
 #endif
 
+#if 0
 static void enable_emergency_dload_mode(void)
 {
 	if (emergency_dload_mode_addr) {
@@ -138,6 +139,7 @@ static void enable_emergency_dload_mode(void)
 		mb();
 	}
 }
+#endif
 
 static int dload_set(const char *val, struct kernel_param *kp)
 {
@@ -166,10 +168,12 @@ void set_dload_mode(int on)
 }
 EXPORT_SYMBOL(set_dload_mode);
 
+#if 0
 static void enable_emergency_dload_mode(void)
 {
 	printk(KERN_ERR "dload mode is not enabled on target\n");
 }
+#endif
 
 static bool get_dload_mode(void)
 {

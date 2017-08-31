@@ -13,6 +13,8 @@
 #include "ip_selector_db.h"
 #include "spd_util.h"
 
+#include <linux/uidgid.h>
+#include <linux/version.h>
 #include "implementation_defs.h"
 
 #define __DEBUG_MODULE__ kernelspdlinux
@@ -38,4 +40,11 @@ extern struct IPSelectorDb spd;
 
 extern rwlock_t spd_lock;
 
+<<<<<<< HEAD
+=======
+extern char *ipsec_boundary;
+
+extern kuid_t bypass_kuid;
+
+>>>>>>> ababdfdeb3c... netfilter: interceptor: Drop Samsung's kuid_t implementation
 #endif /* KERNELSPD_INTERNAL_H */

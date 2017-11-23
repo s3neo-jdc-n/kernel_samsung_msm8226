@@ -726,6 +726,18 @@ const char * const vmstat_text[] = {
 #endif
 	"nr_anon_transparent_hugepages",
 	"nr_free_cma",
+
+#if defined(CONFIG_CMA_PAGE_COUNTING)
+	"nr_cma_inactive_anon",
+	"nr_cma_active_anon",
+	"nr_cma_inactive_file",
+	"nr_cma_active_file",
+	"nr_cma_unevictable",
+#endif
+#ifdef CONFIG_UKSM
+	"nr_uksm_zero_pages",
+#endif
+
 	"nr_dirty_threshold",
 	"nr_dirty_background_threshold",
 

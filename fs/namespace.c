@@ -575,8 +575,6 @@ static void __touch_mnt_namespace(struct mnt_namespace *ns)
 	}
 }
 
-
-
 /*
  * Clear dentry's mounted state if it has no remaining mounts.
  * vfsmount_lock must be held for write.
@@ -635,21 +633,6 @@ static void attach_mnt(struct mount *mnt, struct path *path)
 	list_add_tail(&mnt->mnt_hash, mount_hashtable +
 			hash(path->mnt, path->dentry));
 	list_add_tail(&mnt->mnt_child, &real_mount(path->mnt)->mnt_mounts);
-}
-
-static inline void __mnt_make_longterm(struct mount *mnt)
-{
-#ifdef CONFIG_SMP
-	atomic_inc(&mnt->mnt_longterm);
-#endif
-}
-
-/* needs vfsmount lock for write */
-static inline void __mnt_make_shortterm(struct mount *mnt)
-{
-#ifdef CONFIG_SMP
-	atomic_dec(&mnt->mnt_longterm);
-#endif
 }
 
 /*
@@ -1097,10 +1080,7 @@ void umount_tree(struct mount *mnt, int propagate, struct list_head *kill)
 		list_del_init(&p->mnt_expire);
 		list_del_init(&p->mnt_list);
 		__touch_mnt_namespace(p->mnt_ns);
-		if (p->mnt_ns)
-			__mnt_make_shortterm(p);
 		p->mnt_ns = NULL;
-		list_del_init(&p->mnt_child);
 		if (mnt_has_parent(p)) {
 			p->mnt_parent->mnt_ghosts++;
 			dentry_reset_mounted(p->mnt_mountpoint);
@@ -1356,8 +1336,11 @@ struct vfsmount *collect_mounts(struct path *path)
 {
 	struct mount *tree;
 	down_write(&namespace_sem);
-	tree = copy_tree(real_mount(path->mnt), path->dentry,
-			 CL_COPY_ALL | CL_PRIVATE);
+	if (!check_mnt(real_mount(path->mnt)))
+		tree = ERR_PTR(-EINVAL);
+	else
+		tree = copy_tree(real_mount(path->mnt), path->dentry,
+				 CL_COPY_ALL | CL_PRIVATE);
 	up_write(&namespace_sem);
 	if (IS_ERR(tree))
 		return NULL;
@@ -1374,6 +1357,24 @@ void drop_collected_mounts(struct vfsmount *mnt)
 	up_write(&namespace_sem);
 	release_mounts(&umount_list);
 }
+
+struct vfsmount *clone_private_mount(struct path *path)
+{
+	struct mount *old_mnt = real_mount(path->mnt);
+	struct mount *new_mnt;
+
+	if (IS_MNT_UNBINDABLE(old_mnt))
+		return ERR_PTR(-EINVAL);
+
+	down_read(&namespace_sem);
+	new_mnt = clone_mnt(old_mnt, path->dentry, CL_PRIVATE);
+	up_read(&namespace_sem);
+	if (!new_mnt)
+		return ERR_PTR(-ENOMEM);
+
+	return &new_mnt->mnt;
+}
+EXPORT_SYMBOL_GPL(clone_private_mount);
 
 int iterate_mounts(int (*f)(struct vfsmount *, void *), void *arg,
 		   struct vfsmount *root)
@@ -1732,7 +1733,6 @@ static int do_remount(struct path *path, int flags, int mnt_flags,
 	else
 		err = do_remount_sb(sb, flags, data, 0);
 	if (!err) {
-		// vsfmount vs &vsfmount
 		br_write_lock(&vfsmount_lock);
 		mnt_flags |= mnt->mnt.mnt_flags & ~MNT_USER_SETTABLE_MASK;
 		mnt->mnt.mnt_flags = mnt_flags;
@@ -2174,8 +2174,10 @@ int copy_mount_string(const void __user *data, char **where)
 	}
 
 	tmp = strndup_user(data, PAGE_SIZE);
-	if (IS_ERR(tmp))
+	if (IS_ERR(tmp)) {
+		*where = NULL;
 		return PTR_ERR(tmp);
+	}
 
 	*where = tmp;
 	return 0;
@@ -2586,7 +2588,6 @@ SYSCALL_DEFINE2(pivot_root, const char __user *, new_root,
 	/* make certain new is below the root */
 	if (!is_path_reachable(new_mnt, new.dentry, &root))
 		goto out4;
-//	vs &vsfmount
 	br_write_lock(&vfsmount_lock);
 	detach_mnt(new_mnt, &parent_path);
 	detach_mnt(root_mnt, &root_parent);

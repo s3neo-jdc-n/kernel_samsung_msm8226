@@ -19,17 +19,8 @@
 #include <asm/vfpmacros.h>
 #include "../kernel/entry-header.S"
 
-@ VFP entry point.
-@
-@  r0  = instruction opcode (32-bit ARM or two 16-bit Thumb)
-@  r2  = PC value to resume execution after successful emulation
-@  r9  = normal "successful" return address
-@  r10 = this threads thread_info structure
-@  lr  = unrecognised instruction return address
-@  IRQs disabled.
-@
 ENTRY(do_vfp)
-#ifdef CONFIG_PREEMPT_COUNT
+#ifdef CONFIG_PREEMPT
 	ldr	r4, [r10, #TI_PREEMPT]	@ get preempt count
 	add	r11, r4, #1		@ increment it
 	str	r11, [r10, #TI_PREEMPT]
@@ -43,7 +34,7 @@ ENTRY(do_vfp)
 ENDPROC(do_vfp)
 
 ENTRY(vfp_null_entry)
-#ifdef CONFIG_PREEMPT_COUNT
+#ifdef CONFIG_PREEMPT
 	get_thread_info	r10
 	ldr	r4, [r10, #TI_PREEMPT]	@ get preempt count
 	sub	r11, r4, #1		@ decrement it
@@ -61,7 +52,7 @@ ENDPROC(vfp_null_entry)
 
 	__INIT
 ENTRY(vfp_testing_entry)
-#ifdef CONFIG_PREEMPT_COUNT
+#ifdef CONFIG_PREEMPT
 	get_thread_info	r10
 	ldr	r4, [r10, #TI_PREEMPT]	@ get preempt count
 	sub	r11, r4, #1		@ decrement it

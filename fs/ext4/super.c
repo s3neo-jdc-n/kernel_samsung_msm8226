@@ -412,9 +412,6 @@ static void __save_error_info(struct super_block *sb, const char *func,
 static void save_error_info(struct super_block *sb, const char *func,
 			    unsigned int line)
 {
-	if (sb->s_flags & MS_RDONLY)
-		return;
-
 	__save_error_info(sb, func, line);
 	ext4_commit_super(sb, 1);
 }
@@ -2339,17 +2336,6 @@ struct ext4_attr {
 	int offset;
 };
 
-static int parse_strtoull(const char *buf,
-		unsigned long long max, unsigned long long *value)
-{
-	int ret;
-
-	ret = kstrtoull(skip_spaces(buf), 0, value);
-	if (!ret && *value > max)
-		ret = -EINVAL;
-	return ret;
-}
-
 static int parse_strtoul(const char *buf,
 		unsigned long max, unsigned long *value)
 {
@@ -2395,25 +2381,6 @@ static ssize_t lifetime_write_kbytes_show(struct ext4_attr *a,
 			(unsigned long long)(sbi->s_kbytes_written +
 			((part_stat_read(sb->s_bdev->bd_part, sectors[1]) -
 			  EXT4_SB(sb)->s_sectors_written_start) >> 1)));
-}
-
-static ssize_t r_blocks_count_show(struct ext4_attr *a,
-		struct ext4_sb_info *sbi, char *buf)
-{
-	return snprintf(buf, PAGE_SIZE, "%llu\n",
-		(unsigned long long) atomic64_read(&sbi->s_r_blocks_count));
-}
-
-static ssize_t r_blocks_count_store(struct ext4_attr *a,
-		struct ext4_sb_info *sbi, const char *buf, size_t count)
-{
-	unsigned long long val;
-
-	if (parse_strtoull(buf, -1ULL, &val))
-		return -EINVAL;
-	atomic64_set(&sbi->s_r_blocks_count, val);
-
-	return count;
 }
 
 static ssize_t inode_readahead_blks_store(struct ext4_attr *a,
@@ -2473,7 +2440,6 @@ static struct ext4_attr ext4_attr_##name = __ATTR(name, mode, show, store)
 EXT4_RO_ATTR(delayed_allocation_blocks);
 EXT4_RO_ATTR(session_write_kbytes);
 EXT4_RO_ATTR(lifetime_write_kbytes);
-EXT4_RW_ATTR(r_blocks_count);
 EXT4_ATTR_OFFSET(inode_readahead_blks, 0644, sbi_ui_show,
 		 inode_readahead_blks_store, s_inode_readahead_blks);
 EXT4_RW_ATTR_SBI_UI(inode_goal, s_inode_goal);
@@ -2489,7 +2455,6 @@ static struct attribute *ext4_attrs[] = {
 	ATTR_LIST(delayed_allocation_blocks),
 	ATTR_LIST(session_write_kbytes),
 	ATTR_LIST(lifetime_write_kbytes),
-	ATTR_LIST(r_blocks_count),
 	ATTR_LIST(inode_readahead_blks),
 	ATTR_LIST(inode_goal),
 	ATTR_LIST(mb_stats),
@@ -2994,60 +2959,6 @@ static void ext4_destroy_lazyinit_thread(void)
 		return;
 
 	kthread_stop(ext4_lazyinit_task);
-}
-void print_block_data(struct super_block *sb, sector_t blocknr
-						, unsigned char *data_to_dump, int start, int len)
-{
-	int i, j;
-	int bh_offset = (start / 16) * 16;
-	char row_data[17] = { 0, };
-	char row_hex[50] = { 0, };
-	char ch;
-
-	printk(KERN_ERR "As EXT4-fs error, printing data in hex\n");
-	printk(KERN_ERR " [partition info] s_id : %s, start block# : %llu\n"
-			, sb->s_id, sb->s_bdev->bd_part->start_sect);
-	printk(KERN_ERR " dump block# : %llu, start offset(byte) :", blocknr);
-	printk(KERN_ERR " %d, length(byte) : %d\n", start, len);
-	printk(KERN_ERR "-------------------------------------------------\n");
-
-	for (i = 0; i < (len + 15) / 16; i++) {
-		for (j = 0; j < 16; j++) {
-			ch = *(data_to_dump + bh_offset + j);
-			if (start <= bh_offset + j
-				&& start + len > bh_offset + j) {
-
-				if (isascii(ch) && isprint(ch))
-					sprintf(row_data + j, "%c", ch);
-				else
-					sprintf(row_data + j, ".");
-
-				sprintf(row_hex + (j * 3), "%2.2x ", ch);
-				} else {
-					sprintf(row_data + j, " ");
-					sprintf(row_hex + (j * 3), "-- ");
-				}
-			}
-
-			printk(KERN_ERR "0x%4.4x : %s | %s\n"
-					, bh_offset, row_hex, row_data);
-			bh_offset += 16;
-		}
-		printk(KERN_ERR "---------------------------------------------------\n");
-}
-/* for debugging */
-
-// debugging code
-void print_bh(struct super_block *sb, struct buffer_head *bh
-				, int start, int len)
-{
-	if (bh) {
-		printk(KERN_ERR " print_bh: bh %p, bh->b_size %u, bh->b_data %p\n",
-			(void *) bh, bh->b_size, (void *) bh->b_data);
-		print_block_data(sb, bh->b_blocknr, bh->b_data, start, len);
-	}
-	else
-		printk(KERN_ERR " print_bh: bh is null!\n");
 }
 
 /*
@@ -3590,6 +3501,15 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
 			(EXT4_MAX_BLOCK_FILE_PHYS / EXT4_BLOCKS_PER_GROUP(sb)));
 	db_count = (sbi->s_groups_count + EXT4_DESC_PER_BLOCK(sb) - 1) /
 		   EXT4_DESC_PER_BLOCK(sb);
+	if (EXT4_HAS_INCOMPAT_FEATURE(sb, EXT4_FEATURE_INCOMPAT_META_BG)) {
+		if (le32_to_cpu(es->s_first_meta_bg) > db_count) {
+			ext4_msg(sb, KERN_WARNING,
+				 "first meta block group too large: %u "
+				 "(group descriptor block count %u)",
+				 le32_to_cpu(es->s_first_meta_bg), db_count);
+			goto failed_mount;
+		}
+	}
 	sbi->s_group_desc = ext4_kvmalloc(db_count *
 					  sizeof(struct buffer_head *),
 					  GFP_KERNEL);
@@ -3849,8 +3769,6 @@ no_journal:
 			 "available");
 	}
 
-	atomic64_set(&sbi->s_r_blocks_count, ext4_r_blocks_count(es));
-
 	err = ext4_setup_system_zone(sb);
 	if (err) {
 		ext4_msg(sb, KERN_ERR, "failed to initialize system "
@@ -3905,15 +3823,8 @@ no_journal:
 	return 0;
 
 cantfind_ext4:
-
-	/* If you wanna use the flag 'MS_SILENT', call */
-	/* 'print_bh' function within below 'if'. */
-	printk(KERN_ERR "printing data of superblock-bh\n");
-	print_bh(sb, bh, 0, EXT4_BLOCK_SIZE(sb));
-
 	if (!silent)
 		ext4_msg(sb, KERN_ERR, "VFS: Can't find ext4 filesystem");
-
 	goto failed_mount;
 
 failed_mount7:
@@ -4693,8 +4604,8 @@ static int ext4_statfs(struct dentry *dentry, struct kstatfs *buf)
 		percpu_counter_sum_positive(&sbi->s_dirtyclusters_counter);
 	/* prevent underflow in case that few free space is available */
 	buf->f_bfree = EXT4_C2B(sbi, max_t(s64, bfree, 0));
-	buf->f_bavail = buf->f_bfree - atomic64_read(&sbi->s_r_blocks_count);
-	if (buf->f_bfree < atomic64_read(&sbi->s_r_blocks_count))
+	buf->f_bavail = buf->f_bfree - ext4_r_blocks_count(es);
+	if (buf->f_bfree < ext4_r_blocks_count(es))
 		buf->f_bavail = 0;
 	buf->f_files = le32_to_cpu(es->s_inodes_count);
 	buf->f_ffree = percpu_counter_sum_positive(&sbi->s_freeinodes_counter);

@@ -655,6 +655,7 @@ static ssize_t __write_ports_addfd(char *buf, struct net *net)
 {
 	char *mesg = buf;
 	int fd, err;
+	struct net *net = &init_net;
 
 	err = get_int(&mesg, &fd);
 	if (err != 0 || fd < 0)
@@ -708,6 +709,7 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net)
 	char transport[16];
 	struct svc_xprt *xprt;
 	int port, err;
+	struct net *net = &init_net;
 
 	if (sscanf(buf, "%15s %4u", transport, &port) != 2)
 		return -EINVAL;

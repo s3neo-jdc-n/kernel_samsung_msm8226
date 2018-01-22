@@ -81,16 +81,17 @@ extern int poweroff_charging;
 #define TO_SECS(arr)		(arr[0] | (arr[1] << 8) | (arr[2] << 16) | \
 							(arr[3] << 24))
 
-/* Module parameter to control power-on-alarm */
-static bool poweron_alarm;
-module_param(poweron_alarm, bool, 0644);
-MODULE_PARM_DESC(poweron_alarm, "Enable/Disable power-on alarm");
 
 #if defined(CONFIG_PM8926_BATTERY_CHECK_INTERRUPT)
 static enum power_supply_property pm8926_battery_props[] = {
         POWER_SUPPLY_PROP_PRESENT,
 };
 #endif
+
+bool poweron_alarm;
+module_param(poweron_alarm, bool, 0644);
+MODULE_PARM_DESC(poweron_alarm, "Enable/Disable power-on alarm");
+EXPORT_SYMBOL(poweron_alarm);
 
 /* rtc driver internal structure */
 struct qpnp_rtc {

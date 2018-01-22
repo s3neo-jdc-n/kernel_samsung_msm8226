@@ -13,6 +13,7 @@
  *
  */
 
+#define REALLY_WANT_DEBUGFS
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/seq_file.h>
@@ -20,7 +21,6 @@
 #include <linux/namei.h>
 #include <linux/debugfs.h>
 #include <linux/io.h>
-#include <linux/atomic.h>
 
 static ssize_t default_read_file(struct file *file, char __user *buf,
 				 size_t count, loff_t *ppos)
@@ -373,6 +373,7 @@ struct dentry *debugfs_create_x64(const char *name, umode_t mode,
 EXPORT_SYMBOL_GPL(debugfs_create_x64);
 
 
+
 static int debugfs_size_t_set(void *data, u64 val)
 {
 	*(size_t *)data = val;
@@ -386,16 +387,6 @@ static int debugfs_size_t_get(void *data, u64 *val)
 DEFINE_SIMPLE_ATTRIBUTE(fops_size_t, debugfs_size_t_get, debugfs_size_t_set,
 			"%llu\n");	/* %llu and %zu are more or less the same */
 
-/**
- * debugfs_create_size_t - create a debugfs file that is used to read and write an size_t value
- * @name: a pointer to a string containing the name of the file to create.
- * @mode: the permission that the file should have
- * @parent: a pointer to the parent dentry for this file.  This should be a
- *          directory dentry if set.  If this parameter is %NULL, then the
- *          file will be created in the root of the debugfs filesystem.
- * @value: a pointer to the variable that the file should read to and write
- *         from.
- */
 struct dentry *debugfs_create_size_t(const char *name, umode_t mode,
 				     struct dentry *parent, size_t *value)
 {
@@ -413,6 +404,7 @@ static int debugfs_atomic_t_get(void *data, u64 *val)
 	*val = atomic_read((atomic_t *)data);
 	return 0;
 }
+
 DEFINE_SIMPLE_ATTRIBUTE(fops_atomic_t, debugfs_atomic_t_get,
 			debugfs_atomic_t_set, "%lld\n");
 DEFINE_SIMPLE_ATTRIBUTE(fops_atomic_t_ro, debugfs_atomic_t_get, NULL, "%lld\n");
@@ -444,6 +436,20 @@ struct dentry *debugfs_create_atomic_t(const char *name, umode_t mode,
 	return debugfs_create_file(name, mode, parent, value, &fops_atomic_t);
 }
 EXPORT_SYMBOL_GPL(debugfs_create_atomic_t);
+
+/**
+ * debugfs_create_size_t - create a debugfs file that is used to read and write an size_t value
+ * @name: a pointer to a string containing the name of the file to create.
+ * @mode: the permission that the file should have
+ * @parent: a pointer to the parent dentry for this file.  This should be a
+ *          directory dentry if set.  If this parameter is %NULL, then the
+ *          file will be created in the root of the debugfs filesystem.
+ * @value: a pointer to the variable that the file should read to and write
+ *         from.
+ */
+
+
+
 
 static ssize_t read_file_bool(struct file *file, char __user *user_buf,
 			      size_t count, loff_t *ppos)

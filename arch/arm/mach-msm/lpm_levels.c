@@ -136,6 +136,8 @@ static int msm_pm_sleep_time_override;
 module_param_named(sleep_time_override,
 	msm_pm_sleep_time_override, int, S_IRUGO | S_IWUSR | S_IWGRP);
 
+static uint64_t suspend_wake_time;
+
 static int msm_pm_sleep_sec_debug;
 module_param_named(secdebug,
 	msm_pm_sleep_sec_debug, int, S_IRUGO | S_IWUSR | S_IWGRP);
@@ -481,6 +483,21 @@ s32 msm_cpuidle_get_deep_idle_latency(void)
 	else
 		return level->pwr.latency_us;
 }
+
+void lpm_suspend_wake_time(uint64_t wakeup_time)
+{
+	if (wakeup_time <= 0) {
+		suspend_wake_time = msm_pm_sleep_time_override;
+		return;
+	}
+
+	if (msm_pm_sleep_time_override &&
+			(msm_pm_sleep_time_override < wakeup_time))
+			suspend_wake_time = msm_pm_sleep_time_override;
+	else
+			suspend_wake_time = wakeup_time;
+}
+EXPORT_SYMBOL(lpm_suspend_wake_time);
 
 static int lpm_cpu_callback(struct notifier_block *cpu_nb,
 	unsigned long action, void *hcpu)

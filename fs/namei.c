@@ -328,6 +328,36 @@ static inline int do_inode_permission(struct inode *inode, int mask)
 }
 
 /**
+ * inode_only_permission  -  check access rights to a given inode only
+ * @inode:	inode to check permissions on
+ * @mask:	right to check for (%MAY_READ, %MAY_WRITE, %MAY_EXEC, ...)
+ *
+ * Uses to check read/write/execute permissions on an inode directly, we do
+ * not check filesystem permissions.
+ */
+int inode_only_permission(struct inode *inode, int mask)
+{
+	int retval;
+
+	/*
+	 * Nobody gets write access to an immutable file.
+	 */
+	if (unlikely(mask & MAY_WRITE) && IS_IMMUTABLE(inode))
+		return -EACCES;
+
+	retval = do_inode_permission(inode, mask);
+	if (retval)
+		return retval;
+
+	retval = devcgroup_inode_permission(inode, mask);
+	if (retval)
+		return retval;
+
+	return security_inode_permission(inode, mask);
+}
+EXPORT_SYMBOL(inode_only_permission);
+
+/**
  * inode_permission  -  check for access rights to a given inode
  * @inode:	inode to check permission on
  * @mask:	right to check for (%MAY_READ, %MAY_WRITE, %MAY_EXEC, ...)
@@ -341,8 +371,6 @@ static inline int do_inode_permission(struct inode *inode, int mask)
  */
 int inode_permission(struct inode *inode, int mask)
 {
-	int retval;
-
 	if (unlikely(mask & MAY_WRITE)) {
 		umode_t mode = inode->i_mode;
 
@@ -352,23 +380,9 @@ int inode_permission(struct inode *inode, int mask)
 		if (IS_RDONLY(inode) &&
 		    (S_ISREG(mode) || S_ISDIR(mode) || S_ISLNK(mode)))
 			return -EROFS;
-
-		/*
-		 * Nobody gets write access to an immutable file.
-		 */
-		if (IS_IMMUTABLE(inode))
-			return -EACCES;
 	}
 
-	retval = do_inode_permission(inode, mask);
-	if (retval)
-		return retval;
-
-	retval = devcgroup_inode_permission(inode, mask);
-	if (retval)
-		return retval;
-
-	return security_inode_permission(inode, mask);
+	return inode_only_permission(inode, mask);
 }
 
 /**
@@ -1797,6 +1811,16 @@ static int path_lookupat(int dfd, const char *name,
 		}
 	}
 
+	if (!err) {
+		struct super_block *sb = nd->inode->i_sb;
+		if (sb->s_flags & MS_RDONLY) {
+			if (d_is_su(nd->path.dentry) && !su_visible()) {
+				path_put(&nd->path);
+				err = -ENOENT;
+			}
+		}
+	}
+
 	if (base)
 		fput(base);
 
@@ -1823,6 +1847,29 @@ static int do_path_lookup(int dfd, const char *name,
 		}
 	}
 	return retval;
+}
+
+/* does lookup, returns the object with parent locked */
+struct dentry *kern_path_locked(const char *name, struct path *path)
+{
+	struct nameidata nd;
+	struct dentry *d;
+	int err = do_path_lookup(AT_FDCWD, name, LOOKUP_PARENT, &nd);
+	if (err)
+		return ERR_PTR(err);
+	if (nd.last_type != LAST_NORM) {
+		path_put(&nd.path);
+		return ERR_PTR(-EINVAL);
+	}
+	mutex_lock_nested(&nd.path.dentry->d_inode->i_mutex, I_MUTEX_PARENT);
+	d = lookup_one_len(nd.last.name, nd.path.dentry, nd.last.len);
+	if (IS_ERR(d)) {
+		mutex_unlock(&nd.path.dentry->d_inode->i_mutex);
+		path_put(&nd.path);
+		return d;
+	}
+	*path = nd.path;
+	return d;
 }
 
 int kern_path_parent(const char *name, struct nameidata *nd)
@@ -1950,8 +1997,10 @@ static int user_path_parent(int dfd, const char __user *path,
 	char *s = getname(path);
 	int error;
 
-	if (IS_ERR(s))
+	if (IS_ERR(s)) {
+		*name = 0;
 		return PTR_ERR(s);
+	}
 
 	error = do_path_lookup(dfd, s, LOOKUP_PARENT, nd);
 	if (error)

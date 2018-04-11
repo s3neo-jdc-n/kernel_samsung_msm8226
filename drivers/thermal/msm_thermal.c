@@ -2686,7 +2686,6 @@ int __init msm_thermal_late_init(void)
 	msm_thermal_add_psm_nodes();
 	msm_thermal_add_vdd_rstr_nodes();
 	msm_thermal_add_ocr_nodes();
-	msm_thermal_add_default_temp_limit_nodes();
 	hrtimer_init(&thermal_rtc_hrtimer,
 			CLOCK_BOOTTIME,
 			HRTIMER_MODE_ABS);

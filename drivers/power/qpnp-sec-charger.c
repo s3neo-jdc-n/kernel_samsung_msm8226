@@ -32,10 +32,11 @@
 #include <linux/regulator/machine.h>
 #include <linux/of_batterydata.h>
 #include <linux/qpnp-revid.h>
+#include <linux/hrtimer.h>
 #include <linux/alarmtimer.h>
 
 /* SAMSUNG charging specification */
-#include <linux/alarmtimer.h>
+#include <linux/hrtimer.h>
 #if defined(CONFIG_USB_SWITCH_RT8973)
 #include <linux/platform_data/rt8973.h>
 #elif defined(CONFIG_SM5502_MUIC)
@@ -397,7 +398,7 @@ struct qpnp_chg_chip {
 	struct qpnp_vadc_chip		*vadc_dev;
 	struct qpnp_adc_tm_chip		*adc_tm_dev;
 	struct mutex			jeita_configure_lock;
-	struct alarm			reduce_power_stage_alarm;
+	struct hrtimer			reduce_power_stage_alarm;
 	struct work_struct		reduce_power_stage_work;
 	bool				power_stage_workaround_running;
 
@@ -419,7 +420,7 @@ struct qpnp_chg_chip {
 	unsigned int                    update_time;
 	unsigned int                    sleep_update_time;
 	unsigned int			polling_time;
-	struct alarm			polling_alarm;
+	struct hrtimer			polling_alarm;
 	ktime_t				last_update_time;
 	/* charging and re-charging time management */
 	unsigned long			charging_start_time;
@@ -447,7 +448,7 @@ struct qpnp_chg_chip {
         /* battery event handling */
 	unsigned int			event;
 	unsigned int			event_wait;
-	struct				alarm event_termination_alarm;
+	struct hrtimer			event_termination_alarm;
 	ktime_t				last_event_time;
 	/* Battery temperature monitoring parameters */
         int                             temp_high_block;
@@ -565,7 +566,7 @@ static void sec_bat_event_program_alarm(struct qpnp_chg_chip *chip, int seconds)
  * Function to check event timer expiry
  *
  */
-static void sec_bat_event_expired_timer_func(struct alarm *alarm);
+//static void sec_bat_event_expired_timer_func(struct hrtimer *alarm);
 
 
 /*
@@ -669,7 +670,7 @@ static void sec_bat_program_alarm(struct qpnp_chg_chip *chip, int polling_time);
  * Function to be executed when battery alarm expires
  * status accordingly
  */
-static void sec_bat_polling_alarm_expired(struct alarm *alarm);
+//static void sec_bat_polling_alarm_expired(struct hrtimer *alarm);
 
 #endif
 
@@ -4135,9 +4136,9 @@ qpnp_chg_reduce_power_stage(struct qpnp_chg_chip *chip)
 	if (usb_present && usb_ma_above_wall) {
 		getnstimeofday(&ts);
 		ts.tv_sec += POWER_STAGE_REDUCE_CHECK_PERIOD_SECONDS;
-		alarm_start_range(&chip->reduce_power_stage_alarm,
+		hrtimer_start_range_ns(&chip->reduce_power_stage_alarm,
 					timespec_to_ktime(ts),
-					timespec_to_ktime(ts));
+					ULONG_MAX, HRTIMER_MODE_ABS);
 	} else {
 		pr_debug("stopping power stage workaround\n");
 		chip->power_stage_workaround_running = false;
@@ -4153,14 +4154,15 @@ qpnp_chg_reduce_power_stage_work(struct work_struct *work)
 	qpnp_chg_reduce_power_stage(chip);
 }
 
-static void
-qpnp_chg_reduce_power_stage_callback(struct alarm *alarm)
+/**static void
+qpnp_chg_reduce_power_stage_callback(struct hrtimer *alarm)
 {
 	struct qpnp_chg_chip *chip = container_of(alarm, struct qpnp_chg_chip,
 						reduce_power_stage_alarm);
 
 	schedule_work(&chip->reduce_power_stage_work);
 }
+**/
 
 static int
 qpnp_dc_power_set_property(struct power_supply *psy,
@@ -5719,15 +5721,14 @@ static void sec_bat_event_program_alarm(
         struct qpnp_chg_chip *chip, int seconds)
 {
         ktime_t low_interval = ktime_set(seconds - 10, 0);
-        ktime_t slack = ktime_set(20, 0);
         ktime_t next;
 
         next = ktime_add(chip->last_event_time, low_interval);
-        alarm_start_range(&chip->event_termination_alarm,
-                next, ktime_add(next, slack));
+        hrtimer_start_range_ns(&chip->event_termination_alarm,
+                next, ULONG_MAX, HRTIMER_MODE_ABS);
 }
 
-static void sec_bat_event_expired_timer_func(struct alarm *alarm)
+/**static void sec_bat_event_expired_timer_func(struct hrtimer *alarm)
 {
         struct qpnp_chg_chip *chip =
                 container_of(alarm, struct qpnp_chg_chip,
@@ -5742,7 +5743,6 @@ static void sec_bat_event_expired_timer_func(struct alarm *alarm)
                                 "%s: event expired (0x%x)\n", __func__, chip->event);
 	}
 
-	/* reset BTM EVENT temperature settings if event expired */
 	if (!chip->event) {
                 chip->temp_high_block = chip->batt_pdata->temp_high_block_normal;
                 chip->temp_high_recover = chip->batt_pdata->temp_high_recover_normal;
@@ -5755,6 +5755,7 @@ static void sec_bat_event_expired_timer_func(struct alarm *alarm)
 			chip->temp_low_block,chip->temp_low_recover);
         }
 }
+**/
 
 
 static void sec_bat_event_set(
@@ -5774,7 +5775,7 @@ static void sec_bat_event_set(
                 return;
         }
 
-        alarm_cancel(&chip->event_termination_alarm);
+        hrtimer_cancel(&chip->event_termination_alarm);
         chip->event &= (~chip->event_wait);
 
         if (enable) {
@@ -5792,7 +5793,7 @@ static void sec_bat_event_set(
 			__func__ , event, chip->event);
 
                 chip->event_wait = event;
-                chip->last_event_time = alarm_get_elapsed_realtime();
+                chip->last_event_time = ktime_get_boottime();
 
                 sec_bat_event_program_alarm(chip,
                         chip->batt_pdata->event_waiting_time);
@@ -5823,7 +5824,7 @@ static bool sec_chg_time_management(struct qpnp_chg_chip *chip)
 	struct timespec ts;
 	int batt_capacity = 0;
 
-	current_time = alarm_get_elapsed_realtime();
+	current_time = ktime_get_boottime();
 	ts = ktime_to_timespec(current_time);
 
 	/* device discharging */
@@ -6130,7 +6131,7 @@ static void sec_pm8226_start_charging(struct qpnp_chg_chip *chip)
         ktime_t current_time;
         struct timespec ts;
 
-        current_time = alarm_get_elapsed_realtime();
+        current_time = ktime_get_boottime();
         ts = ktime_to_timespec(current_time);
 
 	if(chip->ovp_uvlo_state != 0) {
@@ -6366,7 +6367,7 @@ static void sec_bat_monitor(struct work_struct *work)
 					if (chip->recent_reported_soc == 100) {
 						ktime_t current_time;
 						struct timespec ts;
-						current_time = alarm_get_elapsed_realtime();
+						current_time = ktime_get_boottime();
 						ts = ktime_to_timespec(current_time);
 						pr_err("first phase charging done: update battery UI FULL \n");
 						chip->batt_status = POWER_SUPPLY_STATUS_FULL;
@@ -6595,18 +6596,17 @@ static void sec_bat_temperature_monitor(struct qpnp_chg_chip *chip)
 static void sec_bat_program_alarm(struct qpnp_chg_chip *chip, int polling_time)
 {
 	ktime_t low_interval = ktime_set(polling_time, 0);
-	ktime_t slack = ktime_set(10, 0);
 	ktime_t next;
 
-	chip->last_update_time = alarm_get_elapsed_realtime();
+	chip->last_update_time = ktime_get_boottime();
 
 	next = ktime_add(chip->last_update_time, low_interval);
-	alarm_start_range(&chip->polling_alarm,
-		next, ktime_add(next, slack));
+	hrtimer_start_range_ns(&chip->polling_alarm,
+		next, ULONG_MAX, HRTIMER_MODE_ABS);
 }
 
 
-static void sec_bat_polling_alarm_expired(struct alarm *alarm)
+/**static void sec_bat_polling_alarm_expired(struct hrtimer *alarm)
 {
 	struct qpnp_chg_chip *chip = container_of(alarm,
 		struct qpnp_chg_chip, polling_alarm);
@@ -6614,6 +6614,7 @@ static void sec_bat_polling_alarm_expired(struct alarm *alarm)
 	schedule_delayed_work(&chip->sec_bat_monitor_work, 0);
 
 }
+**/
 
 #endif
 //#if defined(CONFIG_MACH_MS01_LTE)
@@ -6679,8 +6680,7 @@ qpnp_charger_probe(struct spmi_device *spmi)
 	}
 
 	mutex_init(&chip->jeita_configure_lock);
-	alarm_init(&chip->reduce_power_stage_alarm, ANDROID_ALARM_RTC_WAKEUP,
-			qpnp_chg_reduce_power_stage_callback);
+	hrtimer_init(&chip->reduce_power_stage_alarm, CLOCK_BOOTTIME, HRTIMER_MODE_ABS);
 	INIT_WORK(&chip->reduce_power_stage_work,
 			qpnp_chg_reduce_power_stage_work);
 
@@ -7055,12 +7055,8 @@ qpnp_charger_probe(struct spmi_device *spmi)
 	sec_bat_create_attrs(chip->batt_psy.dev);
 	//sec_fg_create_attrs(chip->fg_psy.dev);
 
-	alarm_init(&chip->event_termination_alarm,
-			ANDROID_ALARM_ELAPSED_REALTIME,
-			sec_bat_event_expired_timer_func);
-	alarm_init(&chip->polling_alarm,
-		ANDROID_ALARM_ELAPSED_REALTIME_WAKEUP,
-		sec_bat_polling_alarm_expired);
+	hrtimer_init(&chip->event_termination_alarm, CLOCK_BOOTTIME, HRTIMER_MODE_ABS);
+	hrtimer_init(&chip->polling_alarm, CLOCK_BOOTTIME, HRTIMER_MODE_ABS);
 
 	wake_lock_init(&chip->monitor_wake_lock, WAKE_LOCK_SUSPEND,
                        "sec-charger-monitor");
@@ -7193,9 +7189,9 @@ static int sec_qpnp_chg_prepare(struct device *dev)
 	}
 
 	cancel_delayed_work(&chip->sec_bat_monitor_work);
-	alarm_cancel(&chip->polling_alarm);
+	hrtimer_cancel(&chip->polling_alarm);
 
-	chip->last_update_time = alarm_get_elapsed_realtime();
+	chip->last_update_time = ktime_get_boottime();
 	sec_bat_program_alarm(chip, chip->polling_time);
 #ifdef SEC_CHARGER_DEBUG
 	pr_err("%s battery update time (%d seconds) !!\n",
@@ -7213,7 +7209,7 @@ static void sec_qpnp_chg_complete(struct device *dev)
         pr_err("%s start\n", __func__);
 #endif
 	cancel_delayed_work(&chip->sec_bat_monitor_work);
-	alarm_cancel(&chip->polling_alarm);
+	hrtimer_cancel(&chip->polling_alarm);
 
 	chip->polling_time = chip->update_time;
 	schedule_delayed_work(&chip->sec_bat_monitor_work, 0);

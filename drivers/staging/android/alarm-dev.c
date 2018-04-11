@@ -94,13 +94,13 @@ static void devalarm_cancel(struct devalarm *alrm)
 		hrtimer_cancel(&alrm->u.hrt);
 }
 
-static void alarm_clear(enum android_alarm_type alarm_type)
+/**static void alarm_clear(enum android_alarm_type alarm_type)
 {
 	uint32_t alarm_type_mask = 1U << alarm_type;
 	unsigned long flags;
 
 	spin_lock_irqsave(&alarm_slock, flags);
-	alarm_dbg(IO, "alarm %d clear\n", alarm_type);
+	pr_alarm(INFO, "alarm %d clear\n", alarm_type);
 	devalarm_try_to_cancel(&alarms[alarm_type]);
 	if (alarm_pending) {
 		alarm_pending &= ~alarm_type_mask;
@@ -111,6 +111,7 @@ static void alarm_clear(enum android_alarm_type alarm_type)
 	spin_unlock_irqrestore(&alarm_slock, flags);
 
 }
+**/
 
 static void alarm_set(enum android_alarm_type alarm_type,
 							struct timespec *ts)
@@ -119,7 +120,7 @@ static void alarm_set(enum android_alarm_type alarm_type,
 	unsigned long flags;
 
 	spin_lock_irqsave(&alarm_slock, flags);
-	alarm_dbg(IO, "alarm %d set %ld.%09ld\n",
+	pr_alarm(INFO, "alarm %d set %ld.%09ld\n",
 			alarm_type, ts->tv_sec, ts->tv_nsec);
 	alarm_enabled |= alarm_type_mask;
 	devalarm_start(&alarms[alarm_type], timespec_to_ktime(*ts));
@@ -132,7 +133,7 @@ static int alarm_wait(void)
 	int rv = 0;
 
 	spin_lock_irqsave(&alarm_slock, flags);
-	alarm_dbg(IO, "alarm wait\n");
+	pr_alarm(INFO, "alarm wait\n");
 	if (!alarm_pending && wait_pending) {
 		__pm_relax(&alarm_wake_lock);
 		wait_pending = 0;

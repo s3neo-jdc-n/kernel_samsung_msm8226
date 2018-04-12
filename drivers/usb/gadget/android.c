@@ -59,11 +59,8 @@
 #ifdef CONFIG_SND_PCM
 #include "f_audio_source.c"
 #endif
-<<<<<<< HEAD
-=======
 #include "f_midi.c"
 #include "f_fs.c"
->>>>>>> 04202f68e789... usb: gadget: android: Add FunctionFS
 #include "f_mass_storage.c"
 #include "u_serial.c"
 #include "u_sdio.c"
@@ -244,11 +241,8 @@ struct android_dev {
 #ifdef CONFIG_USB_LOCK_SUPPORT_FOR_MDM
 	int usb_lock;
 #endif
-<<<<<<< HEAD
-=======
 	char ffs_aliases[256];
 
->>>>>>> 04202f68e789... usb: gadget: android: Add FunctionFS
 	/* A list of struct android_configuration */
 	struct list_head configs;
 	int configs_num;

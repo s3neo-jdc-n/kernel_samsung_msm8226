@@ -15,15 +15,9 @@
 #include "msm_cci.h"
 
 #undef CDBG
-#ifdef CONFIG_MSMB_CAMERA_DEBUG
-#define CDBG(fmt, args ...) pr_debug(fmt, ## args)
-#define S_I2C_DBG(fmt, args ...) pr_debug(fmt, ## args)
-#else
-#define CDBG(fmt, args ...) do { } while (0)
-#define S_I2C_DBG(fmt, args ...) do { } while (0)
-#endif
-#define MAX_I2C_ADDR_TYPE_SIZE (MSM_CAMERA_I2C_3B_ADDR + 1)
-#define MAX_I2C_DATA_TYPE_SIZE (MSM_CAMERA_I2C_SET_BYTE_WRITE_MASK_DATA + 1)
+#define CDBG(fmt, args...) pr_debug(fmt, ##args)
+#define S_I2C_DBG(fmt, args...) pr_debug(fmt, ##args)
+
 #define I2C_COMPARE_MATCH 0
 #define I2C_COMPARE_MISMATCH 1
 #define I2C_POLL_MAX_ITERATION 20
@@ -42,13 +36,7 @@ int32_t msm_camera_cci_i2c_read(struct msm_camera_i2c_client *client,
 		&& data_type != MSM_CAMERA_I2C_WORD_DATA))
 		return rc;
 
-	buf = kzalloc(MAX_I2C_ADDR_TYPE_SIZE + MAX_I2C_DATA_TYPE_SIZE, GFP_KERNEL);
-	if (!buf) {
-		pr_err("%s:%d no memory\n", __func__, __LINE__);
-		return -ENOMEM;
-	}
-
-	cci_ctrl.status = 0; //prevent
+	cci_ctrl.status = 0;//prevent
 	cci_ctrl.cmd = MSM_CCI_I2C_READ;
 	cci_ctrl.cci_info = client->cci_client;
 	cci_ctrl.cfg.cci_i2c_read_cfg.addr = addr;

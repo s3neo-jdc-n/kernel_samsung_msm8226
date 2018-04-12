@@ -78,13 +78,13 @@ static void devalarm_start(struct devalarm *alrm, ktime_t exp)
 }
 
 
-/**static int devalarm_try_to_cancel(struct devalarm *alrm)
+static int devalarm_try_to_cancel(struct devalarm *alrm)
 {
 	if (is_wakeup(alrm->type))
 		return alarm_try_to_cancel(&alrm->u.alrm);
 	return hrtimer_try_to_cancel(&alrm->u.hrt);
 }
-**/
+
 
 static void devalarm_cancel(struct devalarm *alrm)
 {
@@ -272,65 +272,6 @@ static long alarm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
 	case ANDROID_ALARM_GET_TIME(0):
 		if (copy_to_user((void __user *)arg, &ts, sizeof(ts)))
-			return -EFAULT;
-		break;
-	}
-	return rv;
-}
-
-static long alarm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-{
-
-	struct timespec ts;
-	int rv;
-
-	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
-	case ANDROID_ALARM_SET_AND_WAIT(0):
-	case ANDROID_ALARM_SET(0):
-	case ANDROID_ALARM_SET_RTC:
-		if (copy_from_user(&ts, (void __user *)arg, sizeof(ts)))
-			return -EFAULT;
-		break;
-	}
-
-	rv = alarm_do_ioctl(file, cmd, &ts);
-	if (rv)
-		return rv;
-
-	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
-	case ANDROID_ALARM_GET_TIME(0):
-		if (copy_to_user((void __user *)arg, &ts, sizeof(ts)))
-			return -EFAULT;
-		break;
-	}
-
-	return 0;
-}
-#ifdef CONFIG_COMPAT
-static long alarm_compat_ioctl(struct file *file, unsigned int cmd,
-							unsigned long arg)
-{
-
-	struct timespec ts;
-	int rv;
-
-	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
-	case ANDROID_ALARM_SET_AND_WAIT_COMPAT(0):
-	case ANDROID_ALARM_SET_COMPAT(0):
-	case ANDROID_ALARM_SET_RTC_COMPAT:
-		if (compat_get_timespec(&ts, (void __user *)arg))
-			return -EFAULT;
-		/* fall through */
-	case ANDROID_ALARM_GET_TIME_COMPAT(0):
-		cmd = ANDROID_ALARM_COMPAT_TO_NORM(cmd);
-		break;
-	}
-
-	rv = alarm_do_ioctl(file, cmd, &ts);
-
-	switch (ANDROID_ALARM_BASE_CMD(cmd)) {
-	case ANDROID_ALARM_GET_TIME(0): /* NOTE: we modified cmd above */
-		if (compat_put_timespec(&ts, (void __user *)arg))
 			return -EFAULT;
 		break;
 	}

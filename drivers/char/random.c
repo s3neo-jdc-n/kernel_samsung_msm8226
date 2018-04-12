@@ -248,8 +248,6 @@
 #include <linux/percpu.h>
 #include <linux/cryptohash.h>
 #include <linux/fips.h>
-#include <linux/ptrace.h>
-#include <linux/kmemcheck.h>
 
 #ifdef CONFIG_GENERIC_HARDIRQS
 # include <linux/irq.h>
@@ -558,17 +556,7 @@ static void credit_entropy_bits(struct entropy_store *r, int nbits)
 		entropy_count = 0;
 	} else if (entropy_count > r->poolinfo->POOLBITS)
 		entropy_count = r->poolinfo->POOLBITS;
-	if (cmpxchg(&r->entropy_count, orig, entropy_count) != orig)
-		goto retry;
-
-	if (!r->initialized && nbits > 0) {
-		r->entropy_total += nbits;
-		if (r->entropy_total > 128)
-			r->initialized = 1;
-	}
-
-	trace_credit_entropy_bits(r->name, nbits, entropy_count,
-				  r->entropy_total, _RET_IP_);
+	r->entropy_count = entropy_count;
 
 	/* should we wake readers? */
 	if (r == &input_pool && entropy_count >= random_read_wakeup_thresh) {

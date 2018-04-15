@@ -13,6 +13,7 @@
  *
  */
 
+#define REALLY_WANT_DEBUGFS
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/seq_file.h>
@@ -20,7 +21,6 @@
 #include <linux/namei.h>
 #include <linux/debugfs.h>
 #include <linux/io.h>
-#include <linux/atomic.h>
 
 static ssize_t default_read_file(struct file *file, char __user *buf,
 				 size_t count, loff_t *ppos)

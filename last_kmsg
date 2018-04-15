@@ -1,0 +1,302 @@
+[    0.000000] sec_dbg_setup: str=@0x3ff00008
+[    0.000000] sec_dbg_setup: secdbg_paddr = 0x3ff00008
+[    0.000000] sec_dbg_setup: secdbg_size = 0x80000
+[    0.004661] set_dload_mode <1> ( c0e0cd74 )
+[    0.049146] sec_debug_init: restart_reason_ddr_address : 0x0 
+[    0.049157] sec_debug_init: enable=0
+[    0.049168] sec_debug_init:__raw_readl restart_reason=0
+[    0.049179] sec_debug_init: restart_reason : 0xfa00a65c
+[    0.204285] qup_i2c f9924000.i2c: Missing 'qcom,master-id' DT entry
+[    0.205023] qup_i2c f9926000.i2c: Missing 'qcom,i2c-src-freq' DT entry
+[    0.212339] AXI: msm_bus_fabric_init_driver(): msm_bus_fabric_init_driver
+[    0.244374] ION-heap mm: Cannot specify alignment for this type of heap
+[    0.244697] ION-heap adsp: Cannot specify alignment for this type of heap
+[    0.418005] sec_therm_probe:ret=-517
+[    0.418274] sec_therm_probe:ret=-19
+[    0.418363] vadc property missing
+[    0.428931] spmi_pmic_arb fc4cf000.qcom,spmi: PPID 0xc2 incorrect owner 2
+[    0.429092] spmi_pmic_arb fc4cf000.qcom,spmi: PPID 0xc3 incorrect owner 2
+[    0.429509] spmi_pmic_arb fc4cf000.qcom,spmi: PPID 0xc7 incorrect owner 2
+[    0.430025] spmi_pmic_arb fc4cf000.qcom,spmi: PPID 0xa0 incorrect owner 4
+[    0.430443] spmi_pmic_arb fc4cf000.qcom,spmi: PPID 0xa4 incorrect owner 2
+[    0.430799] spmi_pmic_arb fc4cf000.qcom,spmi: PPID 0xa7 incorrect owner 2
+[    0.431880] mdss_mdp_parse_dt_prop_len: Error from prop qcom,mdss-ad-off : spec error in device tree
+[    0.433703] [ on state : 0, off state : 1
+[    0.434350] dsi_panel_device_register:1666, Disp_en_gpio (73)
+[    0.434517] dsi_panel_device_register:1832, Disp_te gpio not specified
+[    0.434696] dsi_panel_device_register:1838, Disp_rst_gpio (25)
+[    0.467230] mdss_dsi_event_handler: unhandled event=1
+[    0.501683] sps: BAM device 0xf9904000 is not registered yet.
+[    0.518572] Registering trace failed
+[    0.522773] cypress_request_gpio: unable to request touchkey_scl [66]
+[    0.605785] cypress_touchkey 21-0020: Touchkey FW Version: 0x06
+[    0.666819] mms_ts_probe: [TSP] probe START!!
+[    0.775548] qup_i2c f9927000.i2c: QUP: I2C status flags :0xc1300c8, irq:131
+[    0.775655] qup_i2c f9927000.i2c: I2C slave addr:0x48 not connected
+[    0.775864] qup_i2c f9927000.i2c: QUP: I2C status flags :0x81343c8, irq:131
+[    0.776042] qup_i2c f9927000.i2c: I2C slave addr:0x48 not connected
+[    0.776175] qup_i2c f9927000.i2c: QUP: I2C status flags :0x81343c8, irq:131
+[    0.776353] qup_i2c f9927000.i2c: I2C slave addr:0x48 not connected
+[    1.195916] mms144_ts 5-0048: [TSP] ISC Ver [0xc7] [0x23] [0x23]
+[    1.196081] mms144_ts 5-0048: [TSP] fw is latest. Do not update.
+[    1.196277] mms_ts_probe: tsp : gpio_to_irq : 339
+[    1.196733] mms_ts_probe: [TSP] probe END!!
+[    1.202090] cam_dummy_init_module:182
+[    1.202209] cam_dummy_platform_probe:87
+[    1.204408] csiphy_probe: device id = 0
+[    1.204631] csiphy_probe: device id = 1
+[    1.205167] csid_probe device id 0
+[    1.205371] csid_probe:526 reading mipi_csi_vdd is 1200000
+[    1.205589] csid_probe device id 1
+[    1.205753] csid_probe:526 reading mipi_csi_vdd is 1200000
+[    1.206812] msm_eeprom_init_module E
+[    1.207244] msm_eeprom_init_module:1396 platform rc -19
+[    1.207426] msm_eeprom_spi_probe
+[    1.208665] msm_eeprom_spi_probe: irq[0] cs[0] CPHA[0] CPOL[0] CS_HIGH[0]
+[    1.208832] msm_eeprom_spi_probe: max_speed[50000000]
+[    1.208922] cell-index 0, rc 0
+[    1.209013] msm_eeprom_spi_setup qcom,eeprom-name fidelix, rc 0
+[    1.209180] msm_camera_get_dt_vreg_data qcom,cam-vreg-name count 2
+[    1.209273] msm_camera_get_dt_vreg_data reg_name[0] = cam_vdig
+[    1.209441] msm_camera_get_dt_vreg_data reg_name[1] = cam_vio
+[    1.209533] msm_camera_get_dt_vreg_data cam_vreg[0].type = 0
+[    1.209698] msm_camera_get_dt_vreg_data cam_vreg[1].type = 0
+[    1.209790] msm_camera_get_dt_vreg_data cam_vreg[0].min_voltage = 1225000
+[    1.209955] msm_camera_get_dt_vreg_data cam_vreg[1].min_voltage = 1800000
+[    1.210121] msm_camera_get_dt_vreg_data cam_vreg[0].max_voltage = 1225000
+[    1.210212] msm_camera_get_dt_vreg_data cam_vreg[1].max_voltage = 1800000
+[    1.210379] msm_camera_get_dt_vreg_data cam_vreg[0].op_mode = 200000
+[    1.210469] msm_camera_get_dt_vreg_data cam_vreg[1].op_mode = 1800000
+[    1.210638] msm_camera_get_dt_power_setting_data qcom,cam-power-seq-type count 2
+[    1.210805] msm_camera_get_dt_power_setting_data seq_name[0] = sensor_vreg
+[    1.210896] msm_camera_get_dt_power_setting_data:385 seq_type[0] 2
+[    1.211063] msm_camera_get_dt_power_setting_data seq_name[1] = sensor_vreg
+[    1.211153] msm_camera_get_dt_power_setting_data:385 seq_type[1] 2
+[    1.211320] msm_camera_get_dt_power_setting_data seq_name[0] = cam_vdig
+[    1.211484] msm_camera_get_dt_power_setting_data power_setting[0].seq_val = 0
+[    1.211575] msm_camera_get_dt_power_setting_data seq_name[1] = cam_vio
+[    1.211741] msm_camera_get_dt_power_setting_data power_setting[1].seq_val = 1
+[    1.211835] msm_camera_get_dt_power_setting_data power_setting[0].config_val = 1
+[    1.211998] msm_camera_get_dt_power_setting_data power_setting[1].config_val = 1
+[    1.212166] msm_camera_get_dt_power_setting_data power_setting[0].delay = 2
+[    1.212256] msm_camera_get_dt_power_setting_data power_setting[1].delay = 2
+[    1.212423] msm_eeprom_get_dt_data gpio count 0
+[    1.212542] msm_eeprom_parse_memory_map: qcom,cal-num-blocks 8
+[    1.212762] msm_eeprom_parse_memory_map num_bytes 4304
+[    1.212855] msm_camera_power_up:1168
+[    1.213021] msm_camera_request_gpio_table:526 invalid gpio_tbl   (null) / size 0
+[    1.213111] msm_camera_power_up index 0
+[    1.213274] msm_camera_power_up type 2
+[    1.216760] msm_camera_power_up index 1
+[    1.216850] msm_camera_power_up type 2
+[    1.220866] ====GPIO STATUS CHECK====
+[    1.220957] CAM_A_en: 0
+[    1.221045] MCLK: 0
+[    1.221133] VT_MCLK: 0
+[    1.221294] I2C_SCL: 1
+[    1.221382] I2C_SDA: 1
+[    1.221469] RESET: 0
+[    1.221555] VT_RESET: 0
+[    1.221642] msm_camera_power_up exit
+[    1.221810] msm_camera_spi_tx_helper: tx(6): 90 00 00 00
+[    1.222106] msm_camera_spi_tx_helper: tx(132): 03 00 00 00
+[    1.222372] msm_camera_spi_tx_helper: tx(8): 03 00 0f fc
+[    1.222521] msm_camera_spi_tx_helper: tx(2308): 03 00 10 00
+[    1.223254] msm_camera_spi_tx_helper: tx(8): 03 00 1f fc
+[    1.223399] msm_camera_spi_tx_helper: tx(68): 03 00 20 00
+[    1.223633] msm_camera_spi_tx_helper: tx(8): 03 00 2f fc
+[    1.223781] msm_camera_spi_tx_helper: tx(1796): 03 00 30 00
+[    1.224323] msm_camera_spi_tx_helper: tx(8): 03 00 3f fc
+[    1.224596] msm_camera_power_down:1488
+[    1.224683] msm_camera_power_down index 1
+[    1.224846] msm_camera_power_down type 2
+[    1.228608] msm_camera_power_down index 0
+[    1.228697] msm_camera_power_down type 2
+[    1.232314] msm_camera_request_gpio_table:526 invalid gpio_tbl   (null) / size 0
+[    1.232405] msm_camera_power_down exit
+[    1.233300] MSM-SENSOR-DRIVER msm_sensor_driver_parse:659 Enter
+[    1.233427] msm_sensor_get_sub_module_index qcom,actuator cell index 1, rc 0
+[    1.233607] msm_sensor_get_sub_module_index qcom,eeprom cell index 0, rc 0
+[    1.233713] msm_sensor_get_sub_module_index qcom,led flash cell index 0, rc 0
+[    1.233883] msm_sensor_get_sub_module_index csiphy_core[0] = 0
+[    1.234049] msm_sensor_get_sub_module_index csid_core[0] = 0
+[    1.234141] msm_camera_get_dt_vreg_data qcom,cam-vreg-name count 3
+[    1.234307] msm_camera_get_dt_vreg_data reg_name[0] = cam_vdig
+[    1.234398] msm_camera_get_dt_vreg_data reg_name[1] = cam_vio
+[    1.234564] msm_camera_get_dt_vreg_data reg_name[2] = cam_vaf
+[    1.234655] msm_camera_get_dt_vreg_data cam_vreg[0].type = 0
+[    1.234818] msm_camera_get_dt_vreg_data cam_vreg[1].type = 0
+[    1.234907] msm_camera_get_dt_vreg_data cam_vreg[2].type = 0
+[    1.235075] msm_camera_get_dt_vreg_data cam_vreg[0].op_mode = 1225000
+[    1.235165] msm_camera_get_dt_vreg_data cam_vreg[1].op_mode = 1800000
+[    1.235359] msm_camera_get_dt_vreg_data cam_vreg[2].op_mode = 2800000
+[    1.235494] MSM-SENSOR-DRIVER msm_sensor_driver_get_gpio_data:512 gpio count 3
+[    1.235667] MSM-SENSOR-DRIVER msm_sensor_driver_get_gpio_data:523 gpio_array[0] = 26
+[    1.235850] MSM-SENSOR-DRIVER msm_sensor_driver_get_gpio_data:523 gpio_array[1] = 37
+[    1.235952] MSM-SENSOR-DRIVER msm_sensor_driver_get_gpio_data:523 gpio_array[2] = 112
+[    1.236122] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[0].gpio = 26
+[    1.236287] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[1].gpio = 37
+[    1.236377] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[2].gpio = 112
+[    1.236543] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[0].flags = 1
+[    1.236633] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[1].flags = 0
+[    1.236796] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[2].flags = 0
+[    1.236964] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[0].label = CAMIF_MCLK
+[    1.237055] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[1].label = CAM_RESET1
+[    1.237221] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[2].label = CAM_VANA_GPIO
+[    1.237390] msm_camera_init_gpio_pin_tbl qcom,gpio-reset 37
+[    1.237483] msm_camera_init_gpio_pin_tbl qcom,gpio-ext-vana-power 112
+[    1.237659] MSM-SENSOR-DRIVER msm_sensor_driver_get_dt_data:617 qcom,cci-master 0, rc 0
+[    1.237752] MSM-SENSOR-DRIVER msm_sensor_driver_get_dt_data:628 msm_sensor_driver_get_dt_data qcom,mount-angle 0, rc -22
+[    1.237758] 
+[    1.238004] MSM-SENSOR-DRIVER msm_sensor_driver_get_dt_data:641 qcom,misc_regulator (null)
+[    1.238121] MSM-SENSOR-DRIVER msm_sensor_driver_parse:659 Enter
+[    1.238289] msm_sensor_get_sub_module_index:143 src_node NULL
+[    1.238380] msm_sensor_get_sub_module_index:158 eeprom src_node NULL
+[    1.238547] msm_sensor_get_sub_module_index:184 src_node NULL
+[    1.238638] msm_sensor_get_sub_module_index csiphy_core[0] = 1
+[    1.238804] msm_sensor_get_sub_module_index csid_core[0] = 1
+[    1.238896] msm_camera_get_dt_vreg_data qcom,cam-vreg-name count 3
+[    1.239064] msm_camera_get_dt_vreg_data reg_name[0] = cam_vdig
+[    1.239154] msm_camera_get_dt_vreg_data reg_name[1] = cam_vana
+[    1.239319] msm_camera_get_dt_vreg_data reg_name[2] = cam_vio
+[    1.239410] msm_camera_get_dt_vreg_data cam_vreg[0].type = 1
+[    1.239574] msm_camera_get_dt_vreg_data cam_vreg[1].type = 1
+[    1.239664] msm_camera_get_dt_vreg_data cam_vreg[2].type = 0
+[    1.239830] msm_camera_get_dt_vreg_data cam_vreg[0].op_mode = 0
+[    1.239920] msm_camera_get_dt_vreg_data cam_vreg[1].op_mode = 0
+[    1.240084] msm_camera_get_dt_vreg_data cam_vreg[2].op_mode = 1800000
+[    1.240281] MSM-SENSOR-DRIVER msm_sensor_driver_get_gpio_data:512 gpio count 3
+[    1.240378] MSM-SENSOR-DRIVER msm_sensor_driver_get_gpio_data:523 gpio_array[0] = 26
+[    1.240552] MSM-SENSOR-DRIVER msm_sensor_driver_get_gpio_data:523 gpio_array[1] = 28
+[    1.240729] MSM-SENSOR-DRIVER msm_sensor_driver_get_gpio_data:523 gpio_array[2] = 112
+[    1.240824] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[0].gpio = 26
+[    1.240988] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[1].gpio = 28
+[    1.241078] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[2].gpio = 112
+[    1.241245] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[0].flags = 1
+[    1.241406] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[1].flags = 0
+[    1.241495] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[2].flags = 0
+[    1.241662] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[0].label = CAMIF_MCLK
+[    1.241753] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[1].label = CAM_RESET1
+[    1.241844] msm_camera_get_dt_gpio_req_tbl cam_gpio_req_tbl[2].label = CAM_VANA_GPIO
+[    1.242011] msm_camera_init_gpio_pin_tbl qcom,gpio-reset 28
+[    1.242103] msm_camera_init_gpio_pin_tbl qcom,gpio-ext-vana-power 112
+[    1.242274] MSM-SENSOR-DRIVER msm_sensor_driver_get_dt_data:617 qcom,cci-master 0, rc 0
+[    1.242442] MSM-SENSOR-DRIVER msm_sensor_driver_get_dt_data:628 msm_sensor_driver_get_dt_data qcom,mount-angle 0, rc -22
+[    1.242448] 
+[    1.242693] MSM-SENSOR-DRIVER msm_sensor_driver_get_dt_data:641 qcom,misc_regulator (null)
+[    1.242823] msm_led_trigger_add_driver:320 called
+[    1.243215] msm_led_trigger_probe:209 called
+[    1.243306] msm_led_trigger_probe:224 pdev id 0
+[    1.243469] msm_led_trigger_probe:228 count 2
+[    1.243575] msm_led_trigger_probe:252 default trigger flash0_trigger
+[    1.243742] msm_led_trigger_probe:265 max_current[0] 1000
+[    1.243849] msm_led_trigger_probe:252 default trigger flash1_trigger
+[    1.244015] msm_led_trigger_probe:265 max_current[1] 1000
+[    1.244119] msm_led_trigger_probe:282 default trigger torch_trigger
+[    1.244283] msm_led_trigger_probe:291 torch max_current 145
+[    1.244375] msm_led_flash_create_v4lsubdev:60 Enter
+[    1.244612] msm_led_flash_create_v4lsubdev:82 probe success
+[    1.245952] __msm_jpeg_init:895] Jpeg Device id 0
+[    1.247691] MSM-CPP cpp_init_hardware:758 stream_cnt:0
+[    1.247941] MSM-CPP cpp_init_hardware:781 cpp_dbg: end of cpp_init_hardware
+[    1.248615] MSM-CPP msm_queue_init:93 E
+[    1.248705] MSM-CPP msm_queue_init:93 E
+[    1.249913] iris_radio: Cannot open the command channel
+[    1.250356] qpnp_charger_read_dt_props: read EXT_OVP gpio (438) 
+[    1.305713] qcom,leds-qpnp qpnp-charger-e89ec600: Unable to get LED base address
+[    1.306299] qcom,leds-qpnp leds-qpnp-e8a2ca00: Regulator get failed(-517)
+[    1.306392] qcom,leds-qpnp leds-qpnp-e8a2ca00: Unable to read flash config data
+[    1.306625] i2c i2c-23: an30259a_probe
+[    1.314410] sps:BAM 0xfd404000 pipe 3 sharing violation
+[    1.314576] sps:Failed to connect BAM 0xe7408800 pipe 3
+[    1.314668] QCE50: qce_sps_init_ep_conn: sps_connect() fail pipe_handle=0xe7408a00, rc = -1
+[    1.314920] sps:De-init client in connected state: 0x1535053
+[    1.316159] QCE50: __qce_init_clk: Unable to get CE core clk
+[    1.316250] QCE50: __qce_init_clk: Unable to init CE clks, rc = -2
+[    1.319876] usb_bam_ipa_create_resources: Failed to create USB_PROD resource
+[    1.320663] cm36651_parse_dt complete, vdd_en:110 p_out:65 /efs/prox_cal
+[    1.415355] cm36651_setup_reg: initial proximity value = 3
+[    1.416957] mpu6500_parse_dt complete, SCL:7 SDA:6 IRQ:64
+[    1.417267] mpu6500_vdd_on: error vreg_2p8 setting voltage ret=-22
+[    1.588647] msm8226-asoc-tapan sound-9302.46: Property 'qcom,audio-routing' does not exist or its length is not even
+[    1.601665] **** secdbg_log or secdbg_paddr is not initialized ****
+[    1.603575] qcom,leds-qpnp leds-qpnp-e8a2ca00: Regulator get failed(-517)
+[    1.603675] qcom,leds-qpnp leds-qpnp-e8a2ca00: Unable to read flash config data
+[    1.604014] qpnp_charger_read_dt_props: read EXT_OVP gpio (438) 
+[    1.604417] qpnp_chg_ibatterm_set: bad mA=70 asked to set, setting 100mA instead
+[    1.604538] qpnp_chg_ibatterm_set: REG IBAT_TERM_CHGR(105b) : 8 
+[    1.604679] sec_jack_probe - defer as codec_probe_done is false
+[    1.605855] gpio-keys gpio_keys.82: [Keys] no regulator: ignoring
+[    1.606763] sec_debug_check_crash_key code 172 value 0 state 0 enable 0
+[    1.606866] sec_debug_check_crash_key code 114 value 0 state 0 enable 0
+[    1.606965] sec_debug_check_crash_key code 115 value 0 state 0 enable 0
+[    1.627716] get_prop_batt_temp: get_bat_temp: adc_code(32772) physical (285)
+[    1.628170] qpnp_batt_external_power_changed: skip qpnp_batt_external_power_changed
+[    1.639218] sec_bat_read_dt_props: sec_bat_read_dt_props:parsing device tree for SEC dt parameters 
+[    1.639427] qpnp_charger_probe: SEC battery device tree read SUCCESS : rc(0) 
+[    1.639527] qpnp_charger_probe: qpnp_charger_probe: initialize battery status(2) & health(1)
+[    1.639843] qpnp_batt_power_set_property: qpnp_batt_power_set_property: same cable, no change in cable type (0) 
+[    1.640021] qpnp_charger_probe: normal boot with cable_type(0)
+[    1.649584] get_prop_batt_temp: get_bat_temp: adc_code(32770) physical (285)
+[    1.670854] qpnp_chg_usb_usbin_valid_irq_handler: USB-IN triggered : usbin-valid voltage 
+[    1.671432] get_prop_batt_temp: get_bat_temp: adc_code(32772) physical (285)
+[    1.671680] qpnp_batt_external_power_changed: skip qpnp_batt_external_power_changed
+[    1.672211] BMS: set_battery_data: battery capacity: 2100 mA
+[    1.795369] qpnp_batt_external_power_changed: skip qpnp_batt_external_power_changed
+[    1.898333] power_supply bms: driver failed to report `current_avg' property: 4294967274
+[    1.898582] qpnp_batt_external_power_changed: skip qpnp_batt_external_power_changed
+[    1.904998] selinux: SELinux:  Could not stat /dev/block: No such file or directory.
+[    1.905005] 
+[    1.905739] init: waitid failed: No child processes
+[    1.920637] init: Unable to open '/vendor/etc/init/hw/init.qcom.rc': No such file or directory
+[    1.920845] init: /init.rc: 10: Could not import file '/vendor/etc/init/hw/init.qcom.rc': No such file or directory
+[    1.922430] init: Unable to open '/system/etc/init': No such file or directory
+[    1.922600] init: Unable to open '/vendor/etc/init': No such file or directory
+[    1.922831] init: Unable to open '/odm/etc/init': No such file or directory
+[    1.931445] sec_jack_probe - defer as codec_probe_done is false
+[    1.940889] power_supply bms: driver failed to report `current_avg' property: 4294967274
+[    2.713425] get_prop_batt_temp: get_bat_temp: adc_code(32753) physical (286)
+[    3.635231] sec_chg_time_management: discharging state! timer inactive
+[    3.652819] get_prop_batt_temp: get_bat_temp: adc_code(32750) physical (286)
+[    3.661752] get_prop_batt_temp: get_bat_temp: adc_code(32747) physical (286)
+[    3.661847] sec_bat_monitor: status(2), health(1), batt_present(1), cable(0), siop(100)
+[    3.662013] sec_bat_monitor: soc(3), vcell(3521), current(-149), temperature(286), chg_en(0)
+[    3.662180] sec_bat_monitor: ovp_uvlo(0), second_phase_chg(0), polling_time(60), event(0x0), HT(600), LT(-50)
+[    3.710868] get_prop_batt_temp: get_bat_temp: adc_code(32747) physical (286)
+[    4.307504] sm5502 15-0025: dev1: 0x4,dev2: 0x0,dev3: 0x0,Carkit: 0x0,ADC: 0x1f,Jig: OFF
+[    4.308048] sm5502 15-0025: sm5502_attach_dev: vbus val2
+[    4.308226] sm5502_callback USB Cable status attached (1) 
+[    4.308329] qpnp_batt_power_set_property: qpnp_batt_power_set_property: cable type changed (0) -> (1) 
+[    4.308496] sec_handle_cable_insertion_removal: USB is inserted, chg_current 500, batt_present(1)
+[    4.308692] sec_handle_cable_insertion_removal: USB : SIOP change in current ibatmax_ma(500)
+[    4.308802] sec_pm8226_start_charging: enable charging for cable type (1) 
+[    4.308966] sec_pm8226_start_charging: battery status changed to (1)
+[    4.309130] qpnp_chg_charge_en:  qpnp_chg_charge_en called with enable=1
+[    4.309265] sec_handle_cable_insertion_removal: battery status changed from (2)->(1)
+[    4.309563] qpnp_batt_external_power_changed: skip qpnp_batt_external_power_changed
+[    4.309825] sec_chg_time_management: Charging Time: 0 secs (rechg:0)
+[    4.327522] get_prop_batt_temp: get_bat_temp: adc_code(32743) physical (286)
+[    4.336471] get_prop_batt_temp: get_bat_temp: adc_code(32744) physical (286)
+[    4.336585] sec_bat_monitor: status(1), health(1), batt_present(1), cable(1), siop(100)
+[    4.336751] sec_bat_monitor: soc(3), vcell(3503), current(-149), temperature(286), chg_en(1)
+[    4.336917] sec_bat_monitor: ovp_uvlo(0), second_phase_chg(0), polling_time(60), event(0x0), HT(600), LT(-50)
+[    4.431972] get_prop_batt_temp: get_bat_temp: adc_code(32744) physical (286)
+[    4.480355] get_prop_batt_temp: get_bat_temp: adc_code(32744) physical (286)
+[   10.070577] ueventd: Unable to open '/vendor/ueventd.rc': No such file or directory
+[   10.070879] ueventd: Unable to open '/odm/ueventd.rc': No such file or directory
+[   10.071392] ueventd: /ueventd.qcom.rc: 29: invalid gid 'qcom_diag'
+[   10.072645] ueventd: /ueventd.qcom.rc: 147: invalid uid 'fm_radio'
+[   10.161666] get_prop_batt_temp: get_bat_temp: adc_code(32730) physical (287)
+[   10.300189] power_supply bms: driver failed to report `current_avg' property: 4294967274
+[   11.581071] init: Cannot open for reading: /proc/sys/vm/mmap_rnd_bits
+[   11.581195] init: Unable to set adequate mmap entropy value!
+[   11.581372] init: Security failure...
+[   11.581472] init: panic: rebooting to bootloader
+[   11.581634] init: android::WriteStringToFile open failed: No such file or directory
+[   11.683255] set_dload_mode <0> ( c018b9b4 )
+[   11.683421] (sec_debug_set_upload_magic) 0
+[   11.684799] Restarting system with command 'bootloader'.
+[   11.685622] failed to disable wdog debug: -4
+[   11.685804] Calling SCM to disable SPMI PMIC arbiter
+
+No errors detected

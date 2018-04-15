@@ -1302,7 +1302,7 @@ static ssize_t subbuf_splice_actor(struct file *in,
                 ret += padding;
 
 out:
-	splice_shrink_spd(pipe, &spd);
+	splice_shrink_spd(&spd);
         return ret;
 }
 

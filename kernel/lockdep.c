@@ -4064,11 +4064,12 @@ static void print_held_locks_bug(struct task_struct *curr)
 	dump_stack();
 }
 
-void debug_check_no_locks_held(struct task_struct *task)
+void debug_check_no_locks_held(void)
 {
-	if (unlikely(task->lockdep_depth > 0))
+	if (unlikely(current->lockdep_depth > 0))
 		print_held_locks_bug(task);
 }
+EXPORT_SYMBOL_GPL(debug_check_no_locks_held);
 
 void debug_show_all_locks(void)
 {

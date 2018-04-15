@@ -19,9 +19,13 @@
 #include <linux/security.h>
 #include "fat.h"
 
-#if defined(CONFIG_VMWARE_MVP)
-#include <linux/namei.h>
-#endif
+static ssize_t fat_write(struct file *file, const char __user *buf,
+			    size_t count, loff_t *ppos)
+{
+	if (__mnt_is_readonly(file->f_path.mnt))
+		return -EROFS;
+	return do_sync_write(file, buf, count, ppos);
+}
 
 static int fat_ioctl_get_attributes(struct inode *inode, u32 __user *user_attr)
 {
@@ -119,64 +123,6 @@ out:
 	return err;
 }
 
-#if defined(CONFIG_VMWARE_MVP)
-extern int _fat_fallocate(struct inode *inode, loff_t len);
-
-static long fat_vmw_extend(struct file *filp, unsigned long len)
-{
-	struct inode *inode = filp->f_path.dentry->d_inode;
-	loff_t off = len;
-	const char mvpEnabledPath[] = "/data/data/com.vmware.mvp.enabled";
-	struct path path;
-	struct kstat stat;
-	int err;
-
-	/*
-	 * Perform some sanity checks (from do_fallocate)
-	 */
-
-	if (len <= 0) {
-		return -EINVAL;
-	}
-
-	if (!(filp->f_mode & FMODE_WRITE)) {
-		return -EBADF;
-	}
-
-	/*
-	 * Revalidate the write permissions, in case security policy has
-	 * changed since the files were opened.
-	 */
-	err = security_file_permission(filp, MAY_WRITE);
-	if (err) {
-		return err;
-	}
-
-	/*
-	 * Verify caller process belongs to mvp.
-	 */
-
-	err = kern_path(mvpEnabledPath, 0, &path);
-	if (err) {
-		return err;
-	}
-
-	err = vfs_getattr(path.mnt, path.dentry, &stat);
-	if (err) {
-		return err;
-	}
-
-	if (current_euid() != stat.uid && current_euid() != 0) {
-		return -EPERM;
-	}
-
-	/*
-	 * Every thing is clear, let's allocate space.
-	 */
-	return _fat_fallocate(inode, off);
-}
-#endif
-
 long fat_generic_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
 	struct inode *inode = filp->f_path.dentry->d_inode;
@@ -187,10 +133,6 @@ long fat_generic_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		return fat_ioctl_get_attributes(inode, user_attr);
 	case FAT_IOCTL_SET_ATTRIBUTES:
 		return fat_ioctl_set_attributes(filp, user_attr);
-#if defined(CONFIG_VMWARE_MVP)
-	case FAT_IOCTL_VMW_EXTEND:
-		return fat_vmw_extend(filp, arg);
-#endif
 	default:
 		return -ENOTTY;	/* Inappropriate ioctl for device */
 	}
@@ -230,7 +172,7 @@ int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
 const struct file_operations fat_file_operations = {
 	.llseek		= generic_file_llseek,
 	.read		= do_sync_read,
-	.write		= do_sync_write,
+	.write		= fat_write,
 	.aio_read	= generic_file_aio_read,
 	.aio_write	= generic_file_aio_write,
 	.mmap		= generic_file_mmap,

@@ -1,0 +1,727 @@
+arch/arm/mach-msm/built-in.o: In function `clock_debug_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:563: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:567: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:569: undefined reference to `debugfs_remove_recursive'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:573: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `clock_debug_add':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:501: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:505: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:546: undefined reference to `debugfs_remove_recursive'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:509: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:513: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:517: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:523: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:528: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/clock-debug.c:532: more undefined references to `debugfs_create_file' follow
+arch/arm/mach-msm/built-in.o: In function `msm_perf_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/perf_debug.c:57: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/perf_debug.c:64: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/perf_debug.c:67: undefined reference to `debugfs_remove'
+arch/arm/mach-msm/built-in.o: In function `debug_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smp2p_debug.c:312: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `smp2p_debug_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smp2p_test.c:1196: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `smem_log_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smem_log.c:1956: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o: In function `debug_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smem_log.c:1949: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smem_log.c:1949: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smem_log.c:1949: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smem_log.c:1949: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smem_log.c:1949: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smem_log.c:1949: more undefined references to `debugfs_create_file' follow
+arch/arm/mach-msm/built-in.o: In function `check_and_create_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_logging_debug.c:152: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o: In function `create_ctx_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_logging_debug.c:171: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o: In function `debug_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_logging_debug.c:129: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_logging_debug.c:129: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `audio_open':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_wma.c:177: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `audio_open':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_wmapro.c:237: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `audio_open':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_aac.c:272: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_multi_aac.c:292: more undefined references to `debugfs_create_file' follow
+arch/arm/mach-msm/built-in.o: In function `audio_aio_release':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_utils_aio.c:588: undefined reference to `debugfs_remove'
+arch/arm/mach-msm/built-in.o: In function `audio_open':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_mp3.c:138: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `audio_open':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_amrnb.c:130: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `audio_open':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_amrwb.c:132: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `config_debug_fs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_amrwbplus.c:31: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `audio_open':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_evrc.c:138: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/qdsp6v2/audio_qcelp.c:143: more undefined references to `debugfs_create_file' follow
+arch/arm/mach-msm/built-in.o: In function `subsys_debugfs_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/subsystem_restart.c:965: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/subsystem_restart.c:965: undefined reference to `debugfs_remove'
+arch/arm/mach-msm/built-in.o: In function `msm_cpu_pm_probe':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm-pm.c:1253: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `msm_bus_dbg_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:310: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `msm_bus_dbg_free_client':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:339: undefined reference to `debugfs_remove'
+arch/arm/mach-msm/built-in.o: In function `msm_bus_dbg_free_fabric':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:525: undefined reference to `debugfs_remove'
+arch/arm/mach-msm/built-in.o: In function `ocmem_sched_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ocmem_sched.c:2466: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `ocmem_core_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ocmem_core.c:1266: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `modem_notifier_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/modem_notifier.c:153: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o: In function `debug_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/modem_notifier.c:146: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/modem_notifier.c:146: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `init_hlt_debug':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/nohlt.c:42: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `init_tracecounters':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/perf_trace_counters.c:106: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/perf_trace_counters.c:109: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/perf_trace_counters.c:112: undefined reference to `debugfs_remove'
+arch/arm/mach-msm/built-in.o: In function `smsm_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smd_debug.c:797: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o: In function `smd_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smd_debug.c:771: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o: In function `smp2p_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smp2p_debug.c:319: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o: In function `smp2p_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smp2p_test.c:1203: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o: In function `bam_dmux_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/bam_dmux.c:2538: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_router.c:3135: more undefined references to `debugfs_create_dir' follow
+arch/arm/mach-msm/built-in.o: In function `debug_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_router.c:3128: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_router.c:3128: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_router.c:3128: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_router.c:3128: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_router.c:3128: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ipc_router.c:3128: more undefined references to `debugfs_create_file' follow
+arch/arm/mach-msm/built-in.o: In function `subsys_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/subsystem_restart.c:943: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o: In function `msm_bus_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:636: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:642: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:648: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:654: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:660: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:663: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:666: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:669: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:672: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:675: more undefined references to `debugfs_create_file' follow
+arch/arm/mach-msm/built-in.o: In function `msm_bus_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:703: undefined reference to `debugfs_remove_recursive'
+arch/arm/mach-msm/built-in.o: In function `msm_cpufreq_probe':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/cpufreq.c:673: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `msm_rpmstats_probe':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/rpm_stats.c:349: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `msm_rpm_master_stats_probe':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/rpm_master_stat.c:554: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `msm_rpmrbcpr_probe':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/rpm_rbcpr_stats_v2.c:379: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `msm_rpm_log_probe':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/rpm_log.c:459: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `tzdbgfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/tz_log.c:625: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/tz_log.c:633: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/tz_log.c:652: undefined reference to `debugfs_remove_recursive'
+arch/arm/mach-msm/built-in.o: In function `ocmem_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ocmem.c:770: undefined reference to `debugfs_create_dir'
+arch/arm/mach-msm/built-in.o: In function `ocmem_zone_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ocmem.c:714: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ocmem.c:720: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ocmem.c:726: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `debug_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/smd_debug.c:764: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `debug_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/bam_dmux.c:1418: undefined reference to `debugfs_create_file'
+arch/arm/mach-msm/built-in.o: In function `msm_bus_dbg_teardown':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/msm_bus/msm_bus_dbg.c:713: undefined reference to `debugfs_remove_recursive'
+arch/arm/mach-msm/built-in.o: In function `msm_rpmstats_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/rpm_stats.c:372: undefined reference to `debugfs_remove'
+arch/arm/mach-msm/built-in.o: In function `msm_rpm_master_stats_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/rpm_master_stat.c:590: undefined reference to `debugfs_remove'
+arch/arm/mach-msm/built-in.o: In function `msm_rpmrbcpr_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/rpm_rbcpr_stats_v2.c:399: undefined reference to `debugfs_remove'
+arch/arm/mach-msm/built-in.o: In function `msm_rpm_log_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/rpm_log.c:491: undefined reference to `debugfs_remove'
+arch/arm/mach-msm/built-in.o: In function `tzdbgfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/tz_log.c:663: undefined reference to `debugfs_remove_recursive'
+arch/arm/mach-msm/built-in.o: In function `ocmem_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/arch/arm/mach-msm/ocmem.c:783: undefined reference to `debugfs_remove_recursive'
+kernel/built-in.o: In function `audit_get_nd':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/kernel/audit_watch.c:362: undefined reference to `kern_path_parent'
+kernel/built-in.o: In function `sched_init_debug':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/kernel/sched/core.c:291: undefined reference to `debugfs_create_file'
+kernel/built-in.o: In function `pm_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/kernel/power/main.c:321: undefined reference to `debugfs_create_file'
+mm/built-in.o: In function `bdi_debug_register':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/backing-dev.c:139: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/backing-dev.c:140: undefined reference to `debugfs_create_file'
+mm/built-in.o: In function `bdi_debug_unregister':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/backing-dev.c:146: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/backing-dev.c:147: undefined reference to `debugfs_remove'
+mm/built-in.o: In function `extfrag_debug_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/vmstat.c:1372: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/vmstat.c:1376: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/vmstat.c:1380: undefined reference to `debugfs_create_file'
+mm/built-in.o: In function `bdi_debug_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/backing-dev.c:67: undefined reference to `debugfs_create_dir'
+mm/built-in.o: In function `memblock_init_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/memblock.c:973: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/memblock.c:976: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/memblock.c:977: undefined reference to `debugfs_create_file'
+mm/built-in.o: In function `init_frontswap':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/frontswap.c:336: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/frontswap.c:339: undefined reference to `debugfs_create_u64'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/frontswap.c:340: undefined reference to `debugfs_create_u64'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/frontswap.c:341: undefined reference to `debugfs_create_u64'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/frontswap.c:343: undefined reference to `debugfs_create_u64'
+mm/built-in.o: In function `zswap_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1064: undefined reference to `debugfs_initialized'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1067: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1071: undefined reference to `debugfs_create_u64'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1073: undefined reference to `debugfs_create_u64'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1075: undefined reference to `debugfs_create_u64'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1077: undefined reference to `debugfs_create_u64'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1079: undefined reference to `debugfs_create_u64'
+mm/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1081: more undefined references to `debugfs_create_u64' follow
+mm/built-in.o: In function `zswap_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1089: undefined reference to `debugfs_create_atomic_t'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1091: undefined reference to `debugfs_create_atomic_t'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1093: undefined reference to `debugfs_create_atomic_t'
+mm/built-in.o: In function `zswap_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/mm/zswap.c:1101: undefined reference to `debugfs_remove_recursive'
+fs/built-in.o: In function `show_stat':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/fs/proc/stat.c:162: undefined reference to `kstat_irqs_usr'
+lib/lib.a(memory_alloc.o): In function `debugfs_mempool_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/lib/memory_alloc.c:420: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/lib/memory_alloc.c:427: undefined reference to `debugfs_create_file'
+lib/built-in.o: In function `dynamic_debug_init_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/lib/dynamic_debug.c:927: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/lib/dynamic_debug.c:930: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/lib/dynamic_debug.c:933: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `qpnp_pin_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpio/qpnp-pin.c:1553: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `mdss_debugfs_cleanup':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/video/msm/mdss/mdss_debug.c:362: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `mdss_debug_register_base':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/video/msm/mdss/mdss_debug.c:277: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/video/msm/mdss/mdss_debug.c:284: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/video/msm/mdss/mdss_debug.c:294: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `mdss_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/video/msm/mdss/mdss_debug.c:385: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/video/msm/mdss/mdss_debug.c:393: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/video/msm/mdss/mdss_debug.c:395: undefined reference to `debugfs_create_u32'
+drivers/built-in.o: In function `create_regulator':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:1168: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:1173: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:1175: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:1177: undefined reference to `debugfs_create_u32'
+drivers/built-in.o: In function `regulator_put':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:1422: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `rdev_init_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3214: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3221: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3223: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3225: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3238: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3253: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3268: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3283: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3287: undefined reference to `debugfs_remove_recursive'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3298: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `regulator_unregister':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3489: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `diag_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/char/diag/diag_debugfs.c:666: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/char/diag/diag_debugfs.c:670: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/char/diag/diag_debugfs.c:673: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/char/diag/diag_debugfs.c:676: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/char/diag/diag_debugfs.c:679: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/char/diag/diag_debugfs.c:682: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `diag_debugfs_cleanup':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/char/diag/diag_debugfs.c:707: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `ion_client_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/ion/ion.c:843: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `ion_client_destroy':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/ion/ion.c:878: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `ion_device_add_heap':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/ion/ion.c:1723: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `ion_device_create':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/ion/ion.c:1919: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/ion/ion.c:1924: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/ion/ion.c:1929: undefined reference to `debugfs_create_dir'
+drivers/built-in.o: In function `ion_device_destroy':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/ion/ion.c:1948: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `kgsl_destroy_process_private':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl.c:857: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `kgsl_device_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:129: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:135: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:137: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:139: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:141: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:143: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:148: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:153: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:155: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:157: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:159: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `kgsl_process_init_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:287: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:302: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `kgsl_core_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:317: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:318: undefined reference to `debugfs_create_dir'
+drivers/built-in.o: In function `kgsl_core_debugfs_close':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/kgsl_debugfs.c:323: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `adreno_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/adreno_debugfs.c:51: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/adreno_debugfs.c:53: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/adreno_debugfs.c:55: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/adreno_debugfs.c:57: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `adreno_profile_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/adreno_profile.c:1011: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/adreno_profile.c:1015: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/adreno_profile.c:1017: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/adreno_profile.c:1019: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpu/msm/adreno_profile.c:1021: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `rbtree_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/regmap/regcache-rbtree.c:183: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `regmap_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/regmap/regmap-debugfs.c:247: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/regmap/regmap-debugfs.c:254: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/regmap/regmap-debugfs.c:258: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/regmap/regmap-debugfs.c:260: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/regmap/regmap-debugfs.c:265: undefined reference to `debugfs_create_bool'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/regmap/regmap-debugfs.c:267: undefined reference to `debugfs_create_bool'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/regmap/regmap-debugfs.c:269: undefined reference to `debugfs_create_bool'
+drivers/built-in.o: In function `regmap_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/regmap/regmap-debugfs.c:276: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `regmap_debugfs_initcall':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/regmap/regmap-debugfs.c:281: undefined reference to `debugfs_create_dir'
+drivers/built-in.o: In function `drop_caches_store':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/misc/sec_misc.c:257: undefined reference to `drop_slab'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/misc/sec_misc.c:267: undefined reference to `drop_pagecache_sb'
+drivers/built-in.o: In function `wcd9xxx_slim_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mfd/wcd9xxx-core.c:1655: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mfd/wcd9xxx-core.c:1656: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mfd/wcd9xxx-core.c:1657: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `wcd9xxx_slim_probe':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mfd/wcd9xxx-core.c:1623: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mfd/wcd9xxx-core.c:1626: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mfd/wcd9xxx-core.c:1630: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `spmi_dfs_create_fs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:585: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:596: undefined reference to `debugfs_create_blob'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:604: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `spmi_dfs_add_controller':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:651: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:662: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:668: undefined reference to `debugfs_create_x32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:674: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:681: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:692: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `spmi_dfs_del_controller':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:718: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `spmi_dfs_create_file':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:745: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `mon_text_add':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/mon/mon_text.c:681: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/mon/mon_text.c:691: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/mon/mon_text.c:699: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/mon/mon_text.c:708: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/mon/mon_text.c:713: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `mon_text_del':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/mon/mon_text.c:723: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/mon/mon_text.c:725: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/mon/mon_text.c:726: undefined reference to `debugfs_remove'
+drivers/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/mon/mon_text.c:760: more undefined references to `debugfs_remove' follow
+drivers/built-in.o: In function `gbam_debugfs_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_bam.c:1303: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `fdiag_debugfs_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_diag.c:862: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `fdiag_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_diag.c:846: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_diag.c:850: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_diag.c:854: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `rmnet_sdio_unbind':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_sdio.c:1417: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `rmnet_mux_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_smd_sdio.c:1762: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_smd_sdio.c:1766: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_smd_sdio.c:1770: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `rmnet_mux_debugfs_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_smd_sdio.c:1778: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `rmnet_smd_debugfs_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_smd.c:1291: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `rmnet_smd_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_smd.c:1273: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_smd.c:1277: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_smd.c:1281: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `rmnet_sdio_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_sdio.c:1501: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/f_rmnet_sdio.c:1505: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `usb_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_serial.c:1298: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_serial.c:1302: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_serial.c:1304: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `usb_debugfs_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_serial.c:1310: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `gsdio_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_sdio.c:1095: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_sdio.c:1099: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `gsmd_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_smd.c:933: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_smd.c:937: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `gbam_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_bam.c:1289: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_bam.c:1293: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_bam.c:1296: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `gbam_debugfs_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_bam.c:1303: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `cleanup_instance':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc.c:1333: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `msm_vidc_debugfs_init_core':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:154: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:159: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:163: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:168: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:173: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:178: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:183: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:188: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:193: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:198: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:203: undefined reference to `debugfs_create_bool'
+drivers/built-in.o: In function `msm_vidc_debugfs_init_inst':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:325: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_vidc_debug.c:330: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `wfd_stats_setup':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/wfd/wfd-util.c:26: undefined reference to `debugfs_create_dir'
+drivers/built-in.o: In function `wfd_stats_teardown':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/wfd/wfd-util.c:39: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `wfd_stats_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/wfd/wfd-util.c:61: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/wfd/wfd-util.c:68: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/wfd/wfd-util.c:76: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/wfd/wfd-util.c:84: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/wfd/wfd-util.c:92: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/wfd/wfd-util.c:100: undefined reference to `debugfs_create_u32'
+drivers/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/wfd/wfd-util.c:108: more undefined references to `debugfs_create_u32' follow
+drivers/built-in.o: In function `wfd_stats_deinit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/wfd/wfd-util.c:209: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `uvc_debugfs_cleanup_stream':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/video/uvc/uvc_debugfs.c:114: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `uvc_debugfs_init_stream':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/video/uvc/uvc_debugfs.c:89: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/video/uvc/uvc_debugfs.c:98: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `uvc_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/video/uvc/uvc_debugfs.c:122: undefined reference to `debugfs_create_dir'
+drivers/built-in.o: In function `uvc_debugfs_cleanup':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/video/uvc/uvc_debugfs.c:135: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `mmc_add_host_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:238: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:249: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:277: undefined reference to `debugfs_remove_recursive'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:252: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:256: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:261: undefined reference to `debugfs_create_u32'
+drivers/built-in.o: In function `mmc_remove_host_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:285: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `mmc_add_card_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:681: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:720: undefined reference to `debugfs_remove_recursive'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:692: undefined reference to `debugfs_create_x32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:696: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:701: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:707: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:713: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `mmc_remove_card_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/core/debugfs.c:727: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `msmsdcc_dbg_createhost':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/host/msm_sdcc.c:7136: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/host/msm_sdcc.c:7146: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/host/msm_sdcc.c:7157: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/host/msm_sdcc.c:7168: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `msmsdcc_remove_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/host/msm_sdcc.c:6511: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `qcedev_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/crypto/msm/qcedev.c:2232: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `_qcedev_debug_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/crypto/msm/qcedev.c:2197: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/crypto/msm/qcedev.c:2206: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/crypto/msm/qcedev.c:2216: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `hid_debug_register':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-debug.c:1078: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-debug.c:1079: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-debug.c:1081: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `hid_debug_unregister':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-debug.c:1090: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-debug.c:1091: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-debug.c:1092: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `hid_debug_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-debug.c:1097: undefined reference to `debugfs_create_dir'
+drivers/built-in.o: In function `hid_debug_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-debug.c:1102: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `picolcd_exit_devfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-picolcd.c:2332: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-picolcd.c:2336: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-picolcd.c:2340: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `picolcd_init_devfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-picolcd.c:2303: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-picolcd.c:2308: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-picolcd.c:2318: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `wiidebug_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-wiimote-debug.c:183: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-wiimote-debug.c:188: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-wiimote-debug.c:200: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `wiidebug_deinit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-wiimote-debug.c:218: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/hid/hid-wiimote-debug.c:219: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `binder_release':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/android/binder.c:3657: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `binder_open':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/android/binder.c:3614: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `hdd_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/prima/CORE/HDD/src/wlan_hdd_debugfs.c:348: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/prima/CORE/HDD/src/wlan_hdd_debugfs.c:353: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/prima/CORE/HDD/src/wlan_hdd_debugfs.c:357: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `hdd_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/prima/CORE/HDD/src/wlan_hdd_debugfs.c:366: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `gpiolib_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/gpio/gpiolib.c:1866: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `regulator_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3728: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/regulator/core.c:3732: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `msm_serial_hsl_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/tty/serial/msm_serial_hs_lite.c:2056: undefined reference to `debugfs_create_dir'
+drivers/built-in.o: In function `wakeup_sources_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/power/wakeup.c:909: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `sync_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/base/sync.c:982: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `spi_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spi/spi_qsd.c:2151: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spi/spi_qsd.c:2157: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `usb_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/core/usb.c:984: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/core/usb.c:988: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/core/usb.c:992: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `usb_debugfs_cleanup':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/core/usb.c:1002: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/core/usb.c:1003: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `msm_otg_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/otg/msm_otg.c:3829: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/otg/msm_otg.c:3837: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/otg/msm_otg.c:3842: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/otg/msm_otg.c:3848: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/otg/msm_otg.c:3857: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/otg/msm_otg.c:3866: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/otg/msm_otg.c:3875: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/otg/msm_otg.c:3879: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `mon_text_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/mon/mon_text.c:745: undefined reference to `debugfs_create_dir'
+drivers/built-in.o: In function `gsmd_ctrl_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_rmnet_ctrl_smd.c:771: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_rmnet_ctrl_smd.c:775: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_rmnet_ctrl_smd.c:778: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `gctrl_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_ctrl_hsic.c:621: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_ctrl_hsic.c:626: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_ctrl_hsic.c:629: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `ghsic_data_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_data_hsic.c:1082: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_data_hsic.c:1086: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_data_hsic.c:1093: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_data_hsic.c:1096: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `ghsuart_ctrl_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_ctrl_hsuart.c:556: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_ctrl_hsuart.c:560: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_ctrl_hsuart.c:564: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `ghsuart_data_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_data_hsuart.c:1087: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_data_hsuart.c:1091: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_data_hsuart.c:1094: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `msm_vidc_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_v4l2_vidc.c:553: undefined reference to `debugfs_create_dir'
+drivers/built-in.o: In function `msmsdcc_dbg_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/host/msm_sdcc.c:7183: undefined reference to `debugfs_create_dir'
+drivers/built-in.o: In function `_qcrypto_debug_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/crypto/msm/qcrypto.c:3915: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/crypto/msm/qcrypto.c:3924: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/crypto/msm/qcrypto.c:3934: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `binder_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/android/binder.c:4344: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/android/binder.c:4346: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/android/binder.c:4350: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/android/binder.c:4355: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/android/binder.c:4360: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/android/binder.c:4365: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/android/binder.c:4370: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/staging/android/binder.c:4403: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `sps_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:529: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:535: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:542: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:550: undefined reference to `debugfs_create_u8'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:558: undefined reference to `debugfs_create_u8'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:566: undefined reference to `debugfs_create_u8'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:574: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:581: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:588: undefined reference to `debugfs_create_u32'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:595: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:606: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:608: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:610: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:612: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:614: undefined reference to `debugfs_remove'
+drivers/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:616: more undefined references to `debugfs_remove' follow
+drivers/built-in.o: In function `msm_serial_hsl_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/tty/serial/msm_serial_hs_lite.c:2071: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `spmi_dfs_destroy':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spmi/spmi-dbgfs.c:771: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `usb_debugfs_cleanup':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/core/usb.c:1002: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/core/usb.c:1003: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `ghsuart_ctrl_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_ctrl_hsuart.c:573: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `ghsuart_data_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_data_hsuart.c:1103: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `gsmd_ctrl_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_rmnet_ctrl_smd.c:783: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_rmnet_ctrl_smd.c:784: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `gctrl_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_ctrl_hsic.c:634: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_ctrl_hsic.c:635: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `ghsic_data_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_data_hsic.c:1101: undefined reference to `debugfs_remove'
+drivers/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/gadget/u_data_hsic.c:1102: more undefined references to `debugfs_remove' follow
+drivers/built-in.o: In function `msm_vidc_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/vidc/msm_v4l2_vidc.c:572: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `msmsdcc_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/mmc/host/msm_sdcc.c:7043: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `_qcrypto_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/crypto/msm/qcrypto.c:3952: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `sps_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:628: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:630: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:632: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:634: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:636: undefined reference to `debugfs_remove'
+drivers/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/platform/msm/sps/sps.c:638: more undefined references to `debugfs_remove' follow
+drivers/built-in.o: In function `msm_hsl_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/tty/serial/msm_serial_hs_lite.c:520: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `ehci_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/host/ehci-msm2.c:1129: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/host/ehci-msm2.c:1133: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/host/ehci-msm2.c:1136: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/host/ehci-msm2.c:1140: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/host/ehci-msm2.c:1143: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `msm_cpp_enable_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/camera_v2/pproc/cpp/msm_cpp.c:2118: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/media/platform/msm/camera_v2/pproc/cpp/msm_cpp.c:2122: undefined reference to `debugfs_create_file'
+drivers/built-in.o: In function `msm_serial_hsl_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/tty/serial/msm_serial_hs_lite.c:1960: undefined reference to `debugfs_remove'
+drivers/built-in.o: In function `spi_debugfs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/spi/spi_qsd.c:2172: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `msm_otg_debugfs_cleanup':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/otg/msm_otg.c:3887: undefined reference to `debugfs_remove_recursive'
+drivers/built-in.o: In function `ehci_msm2_remove':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/drivers/usb/host/ehci-msm2.c:1638: undefined reference to `debugfs_remove_recursive'
+sound/built-in.o: In function `soc_cleanup_codec_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:312: undefined reference to `debugfs_remove_recursive'
+sound/built-in.o: In function `soc_cleanup_platform_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:332: undefined reference to `debugfs_remove_recursive'
+sound/built-in.o: In function `soc_init_codec_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:287: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:295: undefined reference to `debugfs_create_bool'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:297: undefined reference to `debugfs_create_bool'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:300: undefined reference to `debugfs_create_file'
+sound/built-in.o: In function `soc_cleanup_codec_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:312: undefined reference to `debugfs_remove_recursive'
+sound/built-in.o: In function `soc_init_card_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:437: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:445: undefined reference to `debugfs_create_u32'
+sound/built-in.o: In function `soc_init_platform_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:319: undefined reference to `debugfs_create_dir'
+sound/built-in.o: In function `soc_cleanup_card_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:455: undefined reference to `debugfs_remove_recursive'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:455: undefined reference to `debugfs_remove_recursive'
+sound/built-in.o: In function `snd_soc_dapm_debugfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-dapm.c:1872: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-dapm.c:1880: undefined reference to `debugfs_create_file'
+sound/built-in.o: In function `dapm_debugfs_add_widget':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-dapm.c:1896: undefined reference to `debugfs_create_file'
+sound/built-in.o: In function `dapm_debugfs_cleanup':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-dapm.c:1907: undefined reference to `debugfs_remove_recursive'
+sound/built-in.o: In function `be_connect':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-pcm.c:863: undefined reference to `debugfs_create_u32'
+sound/built-in.o: In function `dpcm_be_disconnect':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-pcm.c:916: undefined reference to `debugfs_remove'
+sound/built-in.o: In function `soc_dpcm_debugfs_add':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-pcm.c:2741: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-pcm.c:2750: undefined reference to `debugfs_create_file'
+sound/built-in.o: In function `wcd9xxx_init_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/codecs/wcd9xxx-mbhc.c:4015: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/codecs/wcd9xxx-mbhc.c:4018: undefined reference to `debugfs_create_file'
+sound/built-in.o: In function `wcd9xxx_cleanup_debugfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/codecs/wcd9xxx-mbhc.c:4024: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/codecs/wcd9xxx-mbhc.c:4025: undefined reference to `debugfs_remove'
+sound/built-in.o: In function `snd_soc_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:3829: undefined reference to `debugfs_remove_recursive'
+sound/built-in.o: In function `config_debug_fs_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/msm/qdsp6v2/q6afe.c:2629: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/msm/qdsp6v2/q6afe.c:2631: undefined reference to `debugfs_remove'
+sound/built-in.o: In function `snd_soc_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:3798: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:3805: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:3809: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/soc-core.c:3813: undefined reference to `debugfs_create_file'
+sound/built-in.o: In function `config_debug_fs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/msm/qdsp6v2/q6afe.c:2618: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/msm/qdsp6v2/q6afe.c:2622: undefined reference to `debugfs_create_file'
+sound/built-in.o:/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/sound/soc/msm/qdsp6v2/q6asm.c:295: more undefined references to `debugfs_create_file' follow
+net/built-in.o: In function `hci_register_sysfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/hci_sysfs.c:538: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/hci_sysfs.c:542: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/hci_sysfs.c:545: undefined reference to `debugfs_create_file'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/hci_sysfs.c:548: undefined reference to `debugfs_create_file'
+net/built-in.o: In function `hci_unregister_sysfs':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/hci_sysfs.c:557: undefined reference to `debugfs_remove_recursive'
+net/built-in.o: In function `bt_sysfs_cleanup':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/hci_sysfs.c:577: undefined reference to `debugfs_remove_recursive'
+net/built-in.o: In function `l2cap_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/l2cap_core.c:7960: undefined reference to `debugfs_remove'
+net/built-in.o: In function `cfg80211_dev_rename':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/wireless/core.c:222: undefined reference to `debugfs_rename'
+net/built-in.o: In function `wiphy_register':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/wireless/core.c:601: undefined reference to `debugfs_create_dir'
+net/built-in.o: In function `wiphy_unregister':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/wireless/core.c:686: undefined reference to `debugfs_remove_recursive'
+net/built-in.o: In function `bt_sysfs_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/hci_sysfs.c:564: undefined reference to `debugfs_create_dir'
+net/built-in.o: In function `l2cap_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/l2cap_core.c:7937: undefined reference to `debugfs_create_file'
+net/built-in.o: In function `sco_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/sco.c:1110: undefined reference to `debugfs_create_file'
+net/built-in.o: In function `cfg80211_init':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/wireless/core.c:1040: undefined reference to `debugfs_create_dir'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/wireless/core.c:1055: undefined reference to `debugfs_remove'
+net/built-in.o: In function `sco_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/bluetooth/sco.c:1127: undefined reference to `debugfs_remove'
+net/built-in.o: In function `cfg80211_exit':
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/net/wireless/core.c:1069: undefined reference to `debugfs_remove'
+/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g/Makefile:878: recipe for target '.tmp_vmlinux1' failed
+make[1]: *** [.tmp_vmlinux1] Error 1
+Makefile:130: recipe for target 'sub-make' failed
+make: *** [sub-make] Error 2
+make: Leaving directory '/home/lineage/android/lineage-15.1/kernel/samsung/s3ve3g'
+ninja: build stopped: subcommand failed.
+20:03:32 ninja failed with: exit status 1
+

@@ -16,6 +16,7 @@
 
 #include <linux/types.h>
 #include <linux/spinlock.h>
+#include <mach/msm_ipc_logging.h>
 #include <asm/io.h>
 #include "smp2p_private_api.h"
 

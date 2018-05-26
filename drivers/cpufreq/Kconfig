@@ -147,16 +147,6 @@ config CPU_FREQ_DEFAULT_GOV_NIGHTMARE
 	select CPU_FREQ_GOV_NIGHTMARE
 	help
 
-<<<<<<< HEAD
-=======
-
-config CPU_FREQ_DEFAULT_GOV_SMOOTHASS
-	bool "smoothass"
-	select CPU_FREQ_GOV_SMOOTHASS
-	select CPU_FREQ_GOV_PERFORMANCE
-	help
-	Use CPUFREQ smoothass as default.
-
 config CPU_FREQ_DEFAULT_GOV_SMARTASS2
 	bool "smartass2"
 	select CPU_FREQ_GOV_SMARTASS2
@@ -170,7 +160,6 @@ config CPU_FREQ_DEFAULT_GOV_INTELLIDEMAND
 	  Use the CPUFreq governor 'intellidemand' as default. This is
 	  based on Ondemand with browsing detection based on GPU loading
 
->>>>>>> 3b7a1bc98230... cpufreq: Add intellidemand  governor
 endchoice
 
 config CPU_FREQ_GOV_PERFORMANCE

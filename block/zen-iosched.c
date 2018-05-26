@@ -157,33 +157,19 @@ static int zen_dispatch_requests(struct request_queue *q, int force)
 	return 1;
 }
 
-static int zen_init_queue(struct request_queue *q, struct elevator_type *e)
+static int zen_init_queue(struct request_queue *q)
 {
 	struct zen_data *zdata;
-    struct elevator_queue *eq;
-    
-    eq = elevator_alloc(q, e);
-    if (!eq)
-        return -ENOMEM;
 
 	zdata = kmalloc_node(sizeof(*zdata), GFP_KERNEL, q->node);
-    if (!zdata) {
-        kobject_put(&eq->kobj);
-        return -ENOMEM;
-    }
-    eq->elevator_data = zdata;
-	
- 
-    spin_lock_irq(q->queue_lock);
-	q->elevator = eq;
-	spin_unlock_irq(q->queue_lock);
-	
+    if (!zdata) 
+		return NULL;
 	INIT_LIST_HEAD(&zdata->fifo_list[SYNC]);
 	INIT_LIST_HEAD(&zdata->fifo_list[ASYNC]);
 	zdata->fifo_expire[SYNC] = sync_expire;
 	zdata->fifo_expire[ASYNC] = async_expire;
 	zdata->fifo_batch = fifo_batch;
-	return 0;
+	return zdata;
 }
 
 static void zen_exit_queue(struct elevator_queue *e)

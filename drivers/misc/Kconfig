@@ -985,4 +985,5 @@ source "drivers/misc/lis3lv02d/Kconfig"
 source "drivers/misc/carma/Kconfig"
 source "drivers/misc/altera-stapl/Kconfig"
 source "drivers/misc/modem_if/Kconfig"
+source "drivers/misc/nxp-pn5xx/Kconfig"
 endmenu

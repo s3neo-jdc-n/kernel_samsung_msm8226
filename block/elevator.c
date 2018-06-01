@@ -183,7 +183,7 @@ __setup("elevator=", elevator_setup);
 
 static struct kobj_type elv_ktype;
 
-struct elevator_queue *elevator_alloc(struct request_queue *q,
+static struct elevator_queue *elevator_alloc(struct request_queue *q,
 				  struct elevator_type *e)
 {
 	struct elevator_queue *eq;
@@ -211,7 +211,6 @@ err:
 	elevator_put(e);
 	return NULL;
 }
-EXPORT_SYMBOL(elevator_alloc);
 
 static void elevator_release(struct kobject *kobj)
 {
@@ -260,7 +259,17 @@ int elevator_init(struct request_queue *q, char *name)
 		}
 	}
 
-	err = e->ops.elevator_init_fn(q, e);
+	eq = elevator_alloc(q, e);
+	if (!eq)
+		return -ENOMEM;
+
+	err = elevator_init_queue(q, eq);
+	if (err) {
+		kobject_put(&eq->kobj);
+		return err;
+	}
+
+	q->elevator = eq;
 	return 0;
 }
 EXPORT_SYMBOL(elevator_init);
@@ -1003,27 +1012,16 @@ static int elevator_switch(struct request_queue *q, struct elevator_type *new_e)
 	struct elevator_queue *old_elevator, *e;
 	int err;
 
-	/*
-	 * Turn on BYPASS and drain all requests w/ elevator private data.
-	 * Block layer doesn't call into a quiesced elevator - all requests
-	 * are directly put on the dispatch list without elevator data
-	 * using INSERT_BACK.  All requests have SOFTBARRIER set and no
-	 * merge happens either.
-	 */
-	blk_queue_bypass_start(q);
+	/* allocate new elevator */
+	e = elevator_alloc(q, new_e);
+	if (!e)
+		return -ENOMEM;
 
-	/* unregister and clear all auxiliary data of the old elevator */
-	if (registered)
-		elv_unregister_queue(q);
-
-	spin_lock_irq(q->queue_lock);
-	ioc_clear_queue(q);
-	spin_unlock_irq(q->queue_lock);
-
-	/* allocate, init and register new elevator */
-	err = new_e->ops.elevator_init_fn(q, new_e);
-	if (err)
-		goto fail_init;
+	err = elevator_init_queue(q, e);
+	if (err) {
+		kobject_put(&e->kobj);
+		return err;
+	}
 
 	/* turn on BYPASS and drain all requests w/ elevator private data */
 	elv_quiesce_start(q);

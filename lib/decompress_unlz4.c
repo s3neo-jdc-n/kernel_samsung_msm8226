@@ -128,7 +128,6 @@ STATIC inline int INIT unlz4(u8 *input, int in_len,
 			continue;
 		}
 
-
 		if (posp)
 			*posp += 4;
 

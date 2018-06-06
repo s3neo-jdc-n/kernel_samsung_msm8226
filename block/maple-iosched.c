@@ -234,11 +234,42 @@ maple_dispatch_requests(struct request_queue *q, int force)
 	return 1;
 }
 
+static struct request *
+maple_former_request(struct request_queue *q, struct request *rq)
+{
+	struct maple_data *mdata = maple_get_data(q);
+	const int sync = rq_is_sync(rq);
+	const int data_dir = rq_data_dir(rq);
+
+	if (rq->queuelist.prev == &mdata->fifo_list[sync][data_dir])
+		return NULL;
+
+	/* Return former request */
+	return list_entry(rq->queuelist.prev, struct request, queuelist);
+}
+
+static struct request *
+maple_latter_request(struct request_queue *q, struct request *rq)
+{
+	struct maple_data *mdata = maple_get_data(q);
+	const int sync = rq_is_sync(rq);
+	const int data_dir = rq_data_dir(rq);
+
+	if (rq->queuelist.next == &mdata->fifo_list[sync][data_dir])
+		return NULL;
+
+	/* Return latter request */
+	return list_entry(rq->queuelist.next, struct request, queuelist);
+}
+
 static int maple_init_queue(struct request_queue *q)
 {
+	struct maple_data *mdata;
+
+	/* Allocate structure */
 	mdata = kmalloc_node(sizeof(*mdata), GFP_KERNEL, q->node);
 	if (!mdata) 
-		return -ENOMEM;
+		return NULL;
 
 	/* Initialize fifo lists */
 	INIT_LIST_HEAD(&mdata->fifo_list[SYNC][READ]);
@@ -255,7 +286,7 @@ static int maple_init_queue(struct request_queue *q)
 	mdata->fifo_batch = fifo_batch;
 	mdata->writes_starved = writes_starved;
 	mdata->sleep_latency_multiple = sleep_latency_multiple;
-	
+
 	return mdata;
 }
 

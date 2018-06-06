@@ -878,6 +878,7 @@ static void __ref do_core_control(long temp)
 /* Call with core_control_mutex locked */
 static int __ref update_offline_cores(int val)
 {
+	
 	uint32_t cpu = 0;
 	int ret = 0;
 
@@ -887,15 +888,21 @@ static int __ref update_offline_cores(int val)
 	cpus_offlined = msm_thermal_info.core_control_mask & val;
 
 	for_each_possible_cpu(cpu) {
-		if (!(cpus_offlined & BIT(cpu)))
-			continue;
-		if (!cpu_online(cpu))
-			continue;
-		ret = cpu_down(cpu);
-		if (ret)
-			pr_err("%s: Unable to offline cpu%d\n",
-				KBUILD_MODNAME, cpu);
-	}
+			if (msm_thermal_info.cpus_offlined & BIT(cpu)) {
+#ifdef CONFIG_STATE_HELPER
+			thermal_notify(cpu, 0);
+#endif
+				continue;
+				}
+			if (!cpu_online(cpu))
+				continue;
+			ret = cpu_down(cpu);
+			if (ret)
+				pr_err("Unable to offline CPU%d. err:%d\n",
+					cpu, ret);
+			else
+				pr_debug("Offlined CPU%d\n", cpu);
+		}
 	return ret;
 }
 

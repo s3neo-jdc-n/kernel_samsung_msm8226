@@ -200,25 +200,11 @@ static int maple_dispatch_requests(struct request_queue *q, int force)
 	return 1;
 }
 
-static int maple_init_queue(struct request_queue *q, struct elevator_type *e)
+static int maple_init_queue(struct request_queue *q)
 {
-	struct maple_data *mdata;
-    struct elevator_queue *eq;
-
-    eq = elevator_alloc(q, e);
-    if (!eq)
-        return -ENOMEM;
-
 	mdata = kmalloc_node(sizeof(*mdata), GFP_KERNEL, q->node);
-    if (!mdata) {
-        kobject_put(&eq->kobj);
-        return -ENOMEM;
-    }
-    eq->elevator_data = mdata;
-
-    spin_lock_irq(q->queue_lock);
-	q->elevator = eq;
-	spin_unlock_irq(q->queue_lock);
+	if (!mdata) 
+		return -ENOMEM;
 
 	INIT_LIST_HEAD(&mdata->fifo_list[SYNC][READ]);
 	INIT_LIST_HEAD(&mdata->fifo_list[SYNC][WRITE]);
@@ -231,7 +217,8 @@ static int maple_init_queue(struct request_queue *q, struct elevator_type *e)
 	mdata->fifo_batch = fifo_batch;
 	mdata->writes_starved = writes_starved;
 	mdata->sleep_latency_multiple = sleep_latency_multiple;
-	return 0;
+	
+	return mdata;
 }
 
 static void maple_exit_queue(struct elevator_queue *e)

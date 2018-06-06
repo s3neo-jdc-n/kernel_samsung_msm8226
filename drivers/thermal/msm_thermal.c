@@ -911,8 +911,6 @@ static int __ref update_offline_cores(int val)
 #ifdef CONFIG_STATE_HELPER
 			thermal_notify(cpu, 0);
 #endif
-				continue;
-				}
 			if (!cpu_online(cpu))
 				continue;
 			ret = cpu_down(cpu);
@@ -921,9 +919,8 @@ static int __ref update_offline_cores(int val)
 					cpu, ret);
 			else
 				pr_debug("Offlined CPU%d\n", cpu);
-			trace_thermal_post_core_offline(cpu,
-				cpumask_test_cpu(cpu, cpu_online_mask));
-		} else if (online_core && (previous_cpus_offlined & BIT(cpu))) {
+			}
+		 	else if (online_core && (previous_cpus_offlined & BIT(cpu))) {
 #ifdef CONFIG_STATE_HELPER
 			thermal_notify(cpu, 1);
 #endif
@@ -947,6 +944,7 @@ static int __ref update_offline_cores(int val)
 
 	return ret;
 }
+
 
 static __ref int do_hotplug(void *data)
 {

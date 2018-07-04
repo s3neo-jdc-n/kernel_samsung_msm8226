@@ -224,6 +224,7 @@ static struct clkctl_acpu_speed *pvs_tables_8226[NUM_SPEED_BIN] = {
 
 static struct acpuclk_drv_data drv_data = {
 	.freq_tbl = acpu_freq_tbl_8226_1p6,
+	.current_speed = &(struct clkctl_acpu_speed){ 0 },
 	.pvs_tables = pvs_tables_8226,
 	.bus_scale = &bus_client_pdata,
 #ifdef CONFIG_CPU_VOLTAGE_TABLE

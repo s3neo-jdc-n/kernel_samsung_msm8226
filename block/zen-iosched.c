@@ -157,7 +157,7 @@ static int zen_dispatch_requests(struct request_queue *q, int force)
 	return 1;
 }
 
-static int zen_init_queue(struct request_queue *q)
+static void *zen_init_queue(struct request_queue *q)
 {
 	struct zen_data *zdata;
 

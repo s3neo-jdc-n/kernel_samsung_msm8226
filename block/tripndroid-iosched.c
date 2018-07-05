@@ -190,7 +190,7 @@ static struct request *tripndroid_latter_request(struct request_queue *q, struct
 	return list_entry(rq->queuelist.next, struct request, queuelist);
 }
 
-static int tripndroid_init_queue(struct request_queue *q, struct elevator_type *e)
+static void *tripndroid_init_queue(struct request_queue *q)
 {
 	struct tripndroid_data *td;
 

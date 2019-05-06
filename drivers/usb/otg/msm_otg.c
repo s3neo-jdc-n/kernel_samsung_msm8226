@@ -51,6 +51,9 @@
 #include <mach/msm_bus.h>
 #include <mach/rpm-regulator.h>
 
+#include <linux/regulator/machine.h>
+#include <linux/regulator/driver.h>
+
 #include <linux/fastchg.h>
 
 #define MSM_USB_BASE	(motg->regs)
@@ -74,6 +77,8 @@
 #define USB_PHY_VDD_DIG_VOL_MAX	1320000 /* uV */
 
 #define USB_SUSPEND_DELAY_TIME	(500 * HZ/1000) /* 500 msec */
+
+static struct regulator *otg_regulator;
 
 enum msm_otg_phy_reg_mode {
 	USB_PHY_REG_OFF,
@@ -2605,6 +2610,8 @@ static void msm_otg_sm_work(struct work_struct *w)
 	struct msm_otg *motg = container_of(w, struct msm_otg, sm_work);
 	struct usb_otg *otg = motg->phy.otg;
 	bool work = 0, srp_reqd, dcp;
+	
+	otg_regulator = regulator_get(NULL, "8226_smbbp_otg");
 
 	pm_runtime_resume(otg->phy->dev);
 	if (motg->pm_done)
@@ -2637,6 +2644,15 @@ static void msm_otg_sm_work(struct work_struct *w)
 		} else if ((!test_bit(ID, &motg->inputs) ||
 				test_bit(ID_A, &motg->inputs)) && otg->host) {
 			pr_debug("!id || id_A\n");
+
+ 			if(!IS_ERR(otg_regulator))
+			{
+			    if(!regulator_is_enabled(otg_regulator))
+			    {
+			        regulator_enable(otg_regulator);
+			    }
+			}
+
 			if (msm_chg_mhl_detect(motg)) {
 				work = 1;
 				break;
@@ -2997,6 +3013,15 @@ static void msm_otg_sm_work(struct work_struct *w)
 				test_bit(A_WAIT_BCON, &motg->tmouts)) {
 			pr_debug("(id && id_a/b/c) || a_bus_drop ||"
 					"a_wait_bcon_tmout\n");
+
+ 			if(!IS_ERR(otg_regulator))
+			{
+			    if(regulator_is_enabled(otg_regulator))
+			    {
+			        regulator_disable(otg_regulator);
+			    }
+			}
+			
 			if (test_bit(A_WAIT_BCON, &motg->tmouts)) {
 				pr_info("Device No Response\n");
 				otg_send_event(OTG_EVENT_DEV_CONN_TMOUT);
